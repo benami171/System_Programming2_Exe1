@@ -1,56 +1,11 @@
+// NAME: GAL BEN AMI
+
 #include <climits>
 #include "Algorithms.hpp"
 #include "Graph.hpp"
 #include <queue>
 
 using namespace ariel;
-    #include <limits>
-
-    // int Algorithms::checkIfWeighted(Graph &graph)
-    // {
-    //     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
-    //     int infinity = std::numeric_limits<int>::max(); // Define infinity
-
-    //     for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
-    //     {
-    //         for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j)
-    //         {
-    //             if (i != j && adjacencyMatrix[i][j] == 0)
-    //             {
-    //                 adjacencyMatrix[i][j] = infinity; // Set to infinity
-    //             }
-    //             else if (adjacencyMatrix[i][j] < 0)
-    //             {
-    //                 return -1; // Negative weight
-    //             }
-    //             else if (adjacencyMatrix[i][j] > 0)
-    //             {
-    //                 return 1; // Positive weight
-    //             }
-    //         }
-    //     }
-    //     return 0; // Unweighted
-    // }
-
-    // // check if the graph is directed or undirected 
-    // // by comparing the adjacency matrix with its transpose
-    // int Algorithms::checkIfDirected(Graph &graph)
-    // {
-    //     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
-
-    //     for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
-    //     {
-    //         for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j)
-    //         {
-    //             if (adjacencyMatrix[i][j] != adjacencyMatrix[j][i])
-    //             {
-                    
-    //                 return 1; // Directed
-    //             }
-    //         }
-    //     }
-    //     return 0; // Undirected
-    // }
 
     bool Algorithms::isConnected(Graph &graph)
     {

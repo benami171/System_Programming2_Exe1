@@ -12,7 +12,11 @@ using namespace ariel;
     // by comparing the adjacency matrix with its transpose
     void Graph::setDirectedUndirected(int type)
     {
-        
+        if(type !=0 && type !=1 && type !=-1)
+        {
+            throw invalid_argument("Invalid input");
+        }
+        this->isDirected = type;
     }
     
     void Graph::setWeightsType(int type)
