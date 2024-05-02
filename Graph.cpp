@@ -12,7 +12,7 @@ using namespace ariel;
     // by comparing the adjacency matrix with its transpose
     void Graph::setDirectedUndirected(int type)
     {
-        if(type !=0 && type !=1 && type !=-1)
+        if(type !=1 && type !=-1)
         {
             throw invalid_argument("Invalid input");
         }
@@ -21,7 +21,11 @@ using namespace ariel;
     
     void Graph::setWeightsType(int type)
     {
-       
+       if (type != 1 && type != 0 && type != -1)
+        {
+            throw invalid_argument("Invalid input");
+        }
+        this->weighted = type;
     }
 
     void Graph::loadGraph(vector<vector<int>>& matrix) {
@@ -86,17 +90,19 @@ using namespace ariel;
 
 
     void Graph::printGraph() {
-        int edges = 0;
-        for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
-            for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j) {
-                if (adjacencyMatrix[i][j] != 0) {
-                    ++edges;
-                }
+    int edges = 0;
+    for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
+        for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j) {
+            if (i != j && adjacencyMatrix[i][j] != INT_MAX) {
+                ++edges;
             }
         }
-        cout << "Graph with " << numVertices << " vertices and " << edges << " edges." << endl;
-
     }
+    if (isDirected == -1) { // if the graph is undirected
+        edges /= 2;
+    }
+    cout << "Graph with " << numVertices << " vertices and " << edges << " edges." << endl;
+}
 
     size_t Graph::getNumVertices() {
         return numVertices;
