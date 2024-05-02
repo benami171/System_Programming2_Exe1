@@ -4,8 +4,10 @@
 #include "Algorithms.hpp"
 #include "Graph.hpp"
 #include <queue>
+#include <limits>
 
 using namespace ariel;
+
 
     bool Algorithms::isConnected(Graph &graph)
     {
