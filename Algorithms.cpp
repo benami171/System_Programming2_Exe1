@@ -43,68 +43,83 @@ using namespace ariel;
         return true;
     }
 
-    string Algorithms::shortestPath(Graph &graph, int start, int end)
-    {
-        size_t numVertices = graph.getNumVertices();
-        vector<int> distance(numVertices, INT_MAX);
-        vector<int> parent(numVertices, -1);
-        distance[(size_t)start] = 0;
+    // string Algorithms::shortestPath(Graph &graph, int start, int end)
+    // {
+    //     size_t numVertices = graph.getNumVertices();
+    //     vector<int> distance(numVertices, INT_MAX);
+    //     vector<int> parent(numVertices, -1);
+    //     distance[(size_t)start] = 0;
 
-        vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
+    //     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
 
-        for (size_t i = 1; i <= numVertices - 1; ++i)
-        {
-            for (size_t u = 0; u < numVertices; ++u)
-            {
-                for (size_t v = 0; v < numVertices; ++v)
-                {
-                    if (adjacencyMatrix[u][v] && distance[u] != INT_MAX && distance[u] + adjacencyMatrix[u][v] < distance[v])
-                    {
-                        parent[v] = u;
-                        distance[v] = distance[u] + adjacencyMatrix[u][v];
-                    }
-                }
-            }
-        }
+    //     for (size_t i = 1; i <= numVertices - 1; ++i)
+    //     {
+    //         for (size_t u = 0; u < numVertices; ++u)
+    //         {
+    //             for (size_t v = 0; v < numVertices; ++v)
+    //             {
+    //                 if (adjacencyMatrix[u][v] && distance[u] != INT_MAX && distance[u] + adjacencyMatrix[u][v] < distance[v])
+    //                 {
+    //                     parent[v] = u;
+    //                     distance[v] = distance[u] + adjacencyMatrix[u][v];
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        for (size_t u = 0; u < numVertices; ++u)
-        {
-            for (size_t v = 0; v < numVertices; ++v)
-            {
-                if (adjacencyMatrix[u][v] && distance[u] != INT_MAX && distance[u] + adjacencyMatrix[u][v] < distance[v])
-                {
-                    return "Graph contains negative weight cycle";
-                }
-            }
-        }
+    //     for (size_t u = 0; u < numVertices; ++u)
+    //     {
+    //         for (size_t v = 0; v < numVertices; ++v)
+    //         {
+    //             if (adjacencyMatrix[u][v] && distance[u] != INT_MAX && distance[u] + adjacencyMatrix[u][v] < distance[v])
+    //             {
+    //                 return "Graph contains negative weight cycle";
+    //             }
+    //         }
+    //     }
 
-        if (distance[(size_t)end] == INT_MAX)
-            return "-1"; 
+    //     if (distance[(size_t)end] == INT_MAX)
+    //         return "-1"; 
 
-        string path = to_string(end);
-        size_t current = (size_t)end;
-        while (parent[current] != -1)
-        {
-            path = to_string(parent[current]) + "->" + path;
-            current = (size_t)parent[current];
-        }
+    //     string path = to_string(end);
+    //     size_t current = (size_t)end;
+    //     while (parent[current] != -1)
+    //     {
+    //         path = to_string(parent[current]) + "->" + path;
+    //         current = (size_t)parent[current];
+    //     }
 
-        return path;
+    //     return path;
+    // }
+    string Algorithms::shortestPath(Graph graph, int start, int end)
+{
+    int weightType = graph.getWeightsType(graph);
+    int directedType = graph.getDirectedUndirected(graph);
+    if (weightType == 0) { // Unweighted graph
+        // Use BFS
+        // You'll need to implement this part
+    } else if (weightType == 1) { // Graph with positive weights
+        // Use Dijkstra's algorithm
+        // You'll need to implement this part
+    } else if (weightType == -1) { // Graph with negative weights
+        // Use Bellman-Ford algorithm
+        // Your existing implementation goes here
     }
+}
 
-    bool Algorithms::isContainsCycle(Graph &graph)
-    {
-        size_t numVertices = graph.getNumVertices();
-        vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
-        vector<bool> visited(numVertices, false);
+    // bool Algorithms::isContainsCycle(Graph &graph)
+    // {
+    //     size_t numVertices = graph.getNumVertices();
+    //     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
+    //     vector<bool> visited(numVertices, false);
 
-        for (size_t i = 0; i < numVertices; i++)
-            if (!visited[i])
-                if (isCyclicUtil(i, visited, -1, adjacencyMatrix))
-                    return true;
+    //     for (size_t i = 0; i < numVertices; i++)
+    //         if (!visited[i])
+    //             if (isCyclicUtil(i, visited, -1, adjacencyMatrix))
+    //                 return true;
 
-        return false;
-    }
+    //     return false;
+    // }
 
     bool Algorithms::isCyclicUtil(int v, vector<bool> &visited, int parent, vector<vector<int>> &adjacencyMatrix)
     {
@@ -123,69 +138,69 @@ using namespace ariel;
         return false;
     }
 
-    string Algorithms::isBipartite(Graph &graph)
-    {
-        size_t numVertices = graph.getNumVertices();
-        vector<int> color(numVertices, -1);
-        vector<size_t> setA, setB;
+    // string Algorithms::isBipartite(Graph &graph)
+    // {
+    //     size_t numVertices = graph.getNumVertices();
+    //     vector<int> color(numVertices, -1);
+    //     vector<size_t> setA, setB;
 
-        vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
+    //     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
 
-        for (size_t i = 0; i < numVertices; ++i)
-        {
-            if (color[i] == -1)
-            {
-                queue<size_t> q;
-                q.push(i);
-                color[i] = 1;
+    //     for (size_t i = 0; i < numVertices; ++i)
+    //     {
+    //         if (color[i] == -1)
+    //         {
+    //             queue<size_t> q;
+    //             q.push(i);
+    //             color[i] = 1;
 
-                while (!q.empty())
-                {
-                    size_t current = q.front();
-                    q.pop();
+    //             while (!q.empty())
+    //             {
+    //                 size_t current = q.front();
+    //                 q.pop();
 
-                    for (size_t j = 0; j < numVertices; ++j)
-                    {
-                        if (adjacencyMatrix[current][j])
-                        {
-                            if (color[j] == -1)
-                            {
-                                color[j] = 1 - color[current];
-                                q.push(j);
-                            }
-                            else if (color[j] == color[current])
-                            {
-                                return "No, the graph is not bipartite.";
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    //                 for (size_t j = 0; j < numVertices; ++j)
+    //                 {
+    //                     if (adjacencyMatrix[current][j])
+    //                     {
+    //                         if (color[j] == -1)
+    //                         {
+    //                             color[j] = 1 - color[current];
+    //                             q.push(j);
+    //                         }
+    //                         else if (color[j] == color[current])
+    //                         {
+    //                             return "No, the graph is not bipartite.";
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        for (size_t i = 0; i < numVertices; ++i)
-        {
-            if (color[i] == 0)
-                setA.push_back(i);
-            else
-                setB.push_back(i);
-        }
+    //     for (size_t i = 0; i < numVertices; ++i)
+    //     {
+    //         if (color[i] == 0)
+    //             setA.push_back(i);
+    //         else
+    //             setB.push_back(i);
+    //     }
 
-        string result = "The graph is bipartite: A={";
-        for (size_t i = 0; i < setA.size(); ++i)
-        {
-            result += to_string(setA[i]);
-            if (i != setA.size() - 1)
-                result += ", ";
-        }
-        result += "}, B={";
-        for (size_t i = 0; i < setB.size(); ++i)
-        {
-            result += to_string(setB[i]);
-            if (i != setB.size() - 1)
-                result += ", ";
-        }
-        result += "}.";
+    //     string result = "The graph is bipartite: A={";
+    //     for (size_t i = 0; i < setA.size(); ++i)
+    //     {
+    //         result += to_string(setA[i]);
+    //         if (i != setA.size() - 1)
+    //             result += ", ";
+    //     }
+    //     result += "}, B={";
+    //     for (size_t i = 0; i < setB.size(); ++i)
+    //     {
+    //         result += to_string(setB[i]);
+    //         if (i != setB.size() - 1)
+    //             result += ", ";
+    //     }
+    //     result += "}.";
 
-        return result;
-    }
+    //     return result;
+    // }

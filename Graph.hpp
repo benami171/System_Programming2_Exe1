@@ -13,15 +13,15 @@ class Graph {
 private:
     vector<vector<int>> adjacencyMatrix;
     int isDirected; // -1 for undirected, 1 for directed
-    int weighted; // -1 for negative weight, 0 for no weight, 1 for positive weight
+    int isWeighted; // -1 for negative weight, 0 for no weight, 1 for positive weight
     size_t numVertices;
 
 public:
     //
     void loadGraph(vector<vector<int>> &matrix);
-
+    int getDirectedUndirected(Graph graph);
+    int getWeightsType(Graph graph);
     void setDirectedUndirected(int type);
-
     void setWeightsType(int type);
 
     void printGraph();
