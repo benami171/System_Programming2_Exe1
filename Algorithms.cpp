@@ -5,100 +5,103 @@
 #include "Graph.hpp"
 #include <queue>
 #include <limits>
+#include <algorithm>
+
 
 using namespace ariel;
 
 
-    bool Algorithms::isConnected(Graph &graph)
-    {
-        size_t numVertices = graph.getNumVertices();
-        vector<bool> visited(numVertices, false);
-        queue<int> q;
-        q.push(0);
-        visited[0] = true;
+    bool Algorithms::isConnected(Graph graph)
+{
+    size_t numVertices = graph.getNumVertices();
+    vector<bool> visited(numVertices, false);
+    queue<int> q;
 
-        vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
-
-        while (!q.empty())
-        {
-            int current = q.front();
-            q.pop();
-
-            for (size_t i = 0; i < numVertices; ++i)
-            {
-                if (adjacencyMatrix[(size_t)current][i] && !visited[i])
-                {
-                    q.push(i);
-                    visited[i] = true;
-                }
-            }
-        }
-
-        for (bool v : visited)
-        {
-            if (!v)
-                return false;
-        }
-
-        return true;
+    // Check if the graph has vertices
+    if (numVertices == 0) {
+        return true; // An empty graph is considered connected
     }
 
-    // string Algorithms::shortestPath(Graph &graph, int start, int end)
-    // {
-    //     size_t numVertices = graph.getNumVertices();
-    //     vector<int> distance(numVertices, INT_MAX);
-    //     vector<int> parent(numVertices, -1);
-    //     distance[(size_t)start] = 0;
+    // Start BFS from the first vertex
+    q.push(0);
+    visited[0] = true;
 
-    //     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
+    vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
 
-    //     for (size_t i = 1; i <= numVertices - 1; ++i)
-    //     {
-    //         for (size_t u = 0; u < numVertices; ++u)
-    //         {
-    //             for (size_t v = 0; v < numVertices; ++v)
-    //             {
-    //                 if (adjacencyMatrix[u][v] && distance[u] != INT_MAX && distance[u] + adjacencyMatrix[u][v] < distance[v])
-    //                 {
-    //                     parent[v] = u;
-    //                     distance[v] = distance[u] + adjacencyMatrix[u][v];
-    //                 }
-    //             }
-    //         }
-    //     }
+    while (!q.empty())
+    {
+        int current = q.front();
+        q.pop();
 
-    //     for (size_t u = 0; u < numVertices; ++u)
-    //     {
-    //         for (size_t v = 0; v < numVertices; ++v)
-    //         {
-    //             if (adjacencyMatrix[u][v] && distance[u] != INT_MAX && distance[u] + adjacencyMatrix[u][v] < distance[v])
-    //             {
-    //                 return "Graph contains negative weight cycle";
-    //             }
-    //         }
-    //     }
+        for (size_t i = 0; i < numVertices; ++i)
+        {
+            // Check if there is an edge from the current vertex to i and if i has not been visited yet
+            if (adjacencyMatrix[current][i] != INT_MAX && !visited[i])
+            {
+                q.push(i);
+                visited[i] = true;
+            }
+        }
+    }
 
-    //     if (distance[(size_t)end] == INT_MAX)
-    //         return "-1"; 
+    // Check if all vertices have been visited
+    for (bool v : visited)
+    {
+        if (!v)
+            return false;
+    }
 
-    //     string path = to_string(end);
-    //     size_t current = (size_t)end;
-    //     while (parent[current] != -1)
-    //     {
-    //         path = to_string(parent[current]) + "->" + path;
-    //         current = (size_t)parent[current];
-    //     }
+    return true;
+}
 
-    //     return path;
-    // }
-    string Algorithms::shortestPath(Graph graph, int start, int end)
+       string Algorithms::shortestPath(Graph graph, int start, int end)
 {
     int weightType = graph.getWeightsType(graph);
-    int directedType = graph.getIsDirected(graph);
+    bool directedType = graph.getIsDirected(graph);
     if (weightType == 0) { // Unweighted graph
-        // Use BFS
-        // You'll need to implement this part
-    } else if (weightType == 1) { // Graph with positive weights
+    // Use BFS
+    vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix();
+    int numVertices = graph.getNumVertices();
+    vector<int> prev(numVertices, -1);
+    queue<int> q;
+    q.push(start);
+
+    while (!q.empty()) {
+        int current = q.front();
+        q.pop();
+
+        if (current == end) {
+            break;
+        }
+
+        for (int i = 0; i < numVertices; ++i) {
+            if (adjacencyMatrix[current][i] != 0 && adjacencyMatrix[current][i] != INT_MAX && prev[i] == -1) {
+                q.push(i);
+                prev[i] = current;
+            }
+        }
+    }
+
+    if (prev[end] == -1) {
+    return "No path between start vertex and end vertex";
+} else {
+    vector<int> path;
+    for (int v = end; v != -1; v = prev[v]) {
+        path.push_back(v);
+    }
+    reverse(path.begin(), path.end());
+
+    string result = "The shortest path from " + to_string(start) + " to " + to_string(end) + " is: ";
+    for (size_t i = 0; i < path.size(); ++i) {
+        if (i != 0) {
+            result += "->";
+        }
+        result += to_string(path[i]);
+    }
+
+    return result;
+}
+} else if (weightType == 1) { // Graph with positive weights
         // Use Dijkstra's algorithm
         // You'll need to implement this part
     } else if (weightType == -1) { // Graph with negative weights

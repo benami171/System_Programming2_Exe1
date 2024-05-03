@@ -8,22 +8,6 @@
 using namespace std;
 using namespace ariel;
 
-// check if the graph is directed or undirected
-// by comparing the adjacency matrix with its transpose
-void Graph::setIsDirected(bool value)
-{
-    this->isDirected = value;
-}
-
-void Graph::setWeightsType(int type)
-{
-    if (type != 1 && type != 0 && type != -1)
-    {
-        throw invalid_argument("Invalid input");
-    }
-    this->isWeighted = type;
-}
-
 void Graph::loadGraph(vector<vector<int>> &matrix)
 {
     if (!matrix.empty())
@@ -100,6 +84,22 @@ void Graph::printGraph()
         edges /= 2;
     }
     cout << "Graph with " << numVertices << " vertices and " << edges << " edges." << endl;
+}
+
+// check if the graph is directed or undirected
+// by comparing the adjacency matrix with its transpose
+void Graph::setIsDirected(bool value)
+{
+    this->isDirected = value;
+}
+
+void Graph::setWeightsType(int type)
+{
+    if (type != 1 && type != 0 && type != -1)
+    {
+        throw invalid_argument("Invalid input");
+    }
+    this->isWeighted = type;
 }
 
 size_t Graph::getNumVertices()

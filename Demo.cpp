@@ -14,13 +14,14 @@ using namespace std;
 
 int main()
 {
-    ariel::Graph g(false);
+    ariel::Graph g;
     vector<vector<int>> graph11 = {
         {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
+        {1, 0, 0},
+        {0, 0, 0}};
     g.loadGraph(graph11);
     g.printGraph();
+    cout << Algorithms::isConnected(g) << endl; // should return 1
 
 
 
