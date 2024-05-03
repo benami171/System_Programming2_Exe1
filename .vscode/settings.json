@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "algorithm": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "climits": "cpp"
     }
 }

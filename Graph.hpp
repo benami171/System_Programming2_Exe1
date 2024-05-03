@@ -24,11 +24,11 @@ public:
     
     void setIsDirected(bool type);
     
-    bool getIsDirected(Graph graph);
+    bool getIsDirected();
         
     void setWeightsType(int type);
     
-    int getWeightsType(Graph graph);
+    int getWeightsType();
 
     void printGraph();
 

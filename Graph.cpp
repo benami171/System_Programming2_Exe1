@@ -30,18 +30,14 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
         {
             for (size_t j = 0; j < matrix[i].size(); ++j)
             {
-                if (i == j)
-                {
-                    adjacencyMatrix[i][j] = 0;
-                }
-                else if (matrix[i][j] != 0)
+                if (matrix[i][j] != INT_MAX)
                 {
                     adjacencyMatrix[i][j] = matrix[i][j];
                     if (matrix[i][j] < 0)
                     {
                         hasNegativeWeights = true;
                     }
-                    else if (matrix[i][j] > 1)
+                    else if (matrix[i][j] > 0)
                     {
                         hasPositiveWeights = true;
                     }
@@ -55,13 +51,33 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
         {
             setWeightsType(-1);
         }
-        else if (hasPositiveWeights)
-        {
-            setWeightsType(1);
-        }
         else
         {
-            setWeightsType(0);
+            // Check if the graph is unweighted
+            bool isUnweighted = true;
+            for (size_t i = 0; i < matrix.size(); ++i)
+            {
+                for (size_t j = 0; j < matrix[i].size(); ++j)
+                {
+                    if (matrix[i][j] != INT_MAX && matrix[i][j] != 0 && matrix[i][j] != 1)
+                    {
+                        isUnweighted = false;
+                        break;
+                    }
+                }
+                if (!isUnweighted)
+                {
+                    break;
+                }
+            }
+            if (isUnweighted)
+            {
+                setWeightsType(0);
+            }
+            else
+            {
+                setWeightsType(1);
+            }
         }
     }
 }
@@ -95,10 +111,6 @@ void Graph::setIsDirected(bool value)
 
 void Graph::setWeightsType(int type)
 {
-    if (type != 1 && type != 0 && type != -1)
-    {
-        throw invalid_argument("Invalid input");
-    }
     this->isWeighted = type;
 }
 
@@ -112,13 +124,12 @@ vector<vector<int>> Graph::getAdjacencyMatrix()
     return adjacencyMatrix;
 }
 
-bool Graph::getIsDirected(Graph graph)
+bool Graph::getIsDirected()
 {
-    return graph.isDirected;
+    return this->isDirected;
 }
 
-int Graph::getWeightsType(Graph graph)
+int Graph::getWeightsType()
 {
-    return graph.isWeighted;
+    return this->isWeighted;
 }
-
