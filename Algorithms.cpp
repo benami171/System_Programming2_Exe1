@@ -94,7 +94,7 @@ using namespace ariel;
     string Algorithms::shortestPath(Graph graph, int start, int end)
 {
     int weightType = graph.getWeightsType(graph);
-    int directedType = graph.getDirectedUndirected(graph);
+    int directedType = graph.getIsDirected(graph);
     if (weightType == 0) { // Unweighted graph
         // Use BFS
         // You'll need to implement this part

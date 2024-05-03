@@ -10,13 +10,9 @@ using namespace ariel;
 
 // check if the graph is directed or undirected
 // by comparing the adjacency matrix with its transpose
-void Graph::setDirectedUndirected(int type)
+void Graph::setIsDirected(bool value)
 {
-    if (type != 1 && type != -1)
-    {
-        throw invalid_argument("Invalid input");
-    }
-    this->isDirected = type;
+    this->isDirected = value;
 }
 
 void Graph::setWeightsType(int type)
@@ -70,28 +66,6 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
         }
         numVertices = matrix.size();
 
-        // Check if the graph is directed or undirected
-        // If g != g^T then it is directed, undirected otherwise.
-        bool isDirected = false;
-        for (size_t i = 0; i < matrix.size(); ++i)
-        {
-            for (size_t j = 0; j < matrix[i].size(); ++j)
-            {
-                if (matrix[i][j] != matrix[j][i])
-                {
-                    isDirected = true;
-                    break;
-                }
-            }
-            if (isDirected)
-            {
-                break;
-            }
-        }
-
-        // Call the function setDirectedUndirected with -1 if undirected and 1 if directed
-        setDirectedUndirected(isDirected ? 1 : -1);
-
         // Determine the type of weights and call setWeightsType accordingly
         if (hasNegativeWeights)
         {
@@ -121,7 +95,7 @@ void Graph::printGraph()
             }
         }
     }
-    if (isDirected == -1)
+    if (isDirected == false)
     { // if the graph is undirected
         edges /= 2;
     }
@@ -138,7 +112,7 @@ vector<vector<int>> Graph::getAdjacencyMatrix()
     return adjacencyMatrix;
 }
 
-int Graph::getDirectedUndirected(Graph graph)
+bool Graph::getIsDirected(Graph graph)
 {
     return graph.isDirected;
 }
