@@ -336,85 +336,59 @@ bool isContainsCycle(Graph &graph)
     return false;
 }
 
-string isBipartite(Graph graph)
-{
+string isBipartite(Graph graph) {
     int numVertices = graph.getNumVertices();
     vector<int> colorArr(numVertices, -1);
     vector<int> set1, set2;
+    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
 
-    for (int i = 0; i < numVertices; i++)
-    {
-        if (colorArr[i] == -1)
-        {
-            if (!isBipartiteUtil(graph, i, colorArr, set1, set2))
-            {
-                return "Graph is not bipartite";
+    for (int i = 0; i < numVertices; i++) {
+        if (colorArr[i] == -1) {
+            queue<int> q;
+            q.push(i);
+            colorArr[i] = 1;
+            set1.push_back(i);
+
+            while (!q.empty()) {
+                int u = q.front();
+                q.pop();
+
+                for (int v = 0; v < numVertices; v++) {
+                    if (adjMatrix[u][v] && colorArr[v] == -1) {
+                        colorArr[v] = 1 - colorArr[u];
+                        q.push(v);
+                        if (colorArr[v] == 1) {
+                            set1.push_back(v);
+                        } else {
+                            set2.push_back(v);
+                        }
+                    } else if (adjMatrix[u][v] && colorArr[v] == colorArr[u]) {
+                        return "Graph is not bipartite";
+                    }
+                }
             }
         }
     }
 
     string set1Str = "A = {";
-    for (int i = 0; i < set1.size(); i++)
-    {
+    for (int i = 0; i < set1.size(); i++) {
         set1Str += to_string(set1[i]);
-        if (i != set1.size() - 1)
-        {
+        if (i != set1.size() - 1) {
             set1Str += ",";
         }
     }
     set1Str += "}";
 
     string set2Str = " B = {";
-    for (int i = 0; i < set2.size(); i++)
-    {
+    for (int i = 0; i < set2.size(); i++) {
         set2Str += to_string(set2[i]);
-        if (i != set2.size() - 1)
-        {
+        if (i != set2.size() - 1) {
             set2Str += ",";
         }
     }
     set2Str += "}";
 
     return set1Str + set2Str;
-}
-
-bool isBipartiteUtil(Graph graph, int src, vector<int> &colorArr, vector<int> &set1, vector<int> &set2)
-{
-    colorArr[src] = 1;
-    set1.push_back(src);
-    queue<int> q;
-    q.push(src);
-
-    while (!q.empty())
-    {
-        int u = q.front();
-        q.pop();
-
-        vector<int> adjVertices = getAdjVertices(u, graph);
-        for (int i = 0; i < adjVertices.size(); i++)
-        {
-            int v = adjVertices[i];
-
-            if (colorArr[v] == -1)
-            {
-                colorArr[v] = 1 - colorArr[u];
-                q.push(v);
-                if (colorArr[v] == 1)
-                {
-                    set1.push_back(v);
-                }
-                else
-                {
-                    set2.push_back(v);
-                }
-            }
-            else if (colorArr[v] == colorArr[u])
-            {
-                return false;
-            }
-        }
-    }
-    return true;
 }
 // string Algorithms::isBipartite(Graph &graph)
 // {
