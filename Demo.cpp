@@ -36,6 +36,70 @@ int main()
     cout << Algorithms::isConnected(g1) << endl;        // should return 1
     cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return
 
+    vector<vector<int>> graph13 = {
+        {INT_MAX,       2,   INT_MAX,      9},
+
+        {      2, INT_MAX,         3,      4},
+
+        {INT_MAX,       3,   INT_MAX,      3},
+
+        {      9,       4,         3,INT_MAX}};
+
+    g1.setIsDirected(false);
+    g1.loadGraph(graph13);
+    g1.printGraph();
+    cout << Algorithms::isConnected(g1) << endl;        // should return 1
+    cout << Algorithms::shortestPath(g1, 0, 3) << endl; // should return 0->1->2->3
+
+
+    g1.setIsDirected(true);
+        // NEGATIVE WEIGHTS
+        // NO NEGATIVECYCLE
+     vector<vector<int>> graph14 = {
+        {INT_MAX,      3,      6,INT_MAX},
+
+        {INT_MAX,INT_MAX,INT_MAX,      3},
+
+        {INT_MAX,     -8,INT_MAX,      3},
+
+        {INT_MAX,INT_MAX,INT_MAX,INT_MAX}};
+    g1.loadGraph(graph14);
+    g1.printGraph();
+    cout << Algorithms::isConnected(g1) << endl;        // should return 1
+    cout << Algorithms::shortestPath(g1, 0, 3) << endl; // should return 0->2->1->3
+
+
+        // NEGATIVE WEIGHT
+        // NEGATIVE CYCLE
+        vector<vector<int>> graph15 = {
+        {INT_MAX,      3,      6,INT_MAX,      2,INT_MAX},
+
+        {INT_MAX,INT_MAX,INT_MAX,      3,INT_MAX,INT_MAX},
+
+        {INT_MAX,     -8,INT_MAX,      3,INT_MAX,      5},
+
+        {INT_MAX,INT_MAX,      2,INT_MAX,INT_MAX,INT_MAX},
+
+        {INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,      3},
+
+        {INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX}};
+
+    g1.loadGraph(graph15);
+    g1.printGraph();
+    cout << Algorithms::isConnected(g1) << endl;        // should return 1
+    cout << Algorithms::shortestPath(g1, 4, 0) << endl; // should return NO PATH FROM START TO END
+    cout << Algorithms::shortestPath(g1,4,5) << endl; // should return 4->5
+    cout << Algorithms::shortestPath(g1, 0, 4) << endl; // should return 0->4
+    cout << Algorithms::shortestPath(g1, 0, 5) << endl; // should return 0->4->5
+        vector<vector<int>> graph16 = {
+            {INT_MAX,5,INT_MAX},
+            {INT_MAX,INT_MAX,-11},
+            {5,INT_MAX,INT_MAX}};
+    g1.loadGraph(graph16);
+    g1.printGraph();
+    cout << Algorithms::isConnected(g1) << endl;        // should return 1
+    cout << Algorithms::shortestPath(g1, 2, 1) << endl; // should return 0->1->2    
+
     return 0;
 
     // // 3x3 matrix that represents a connected graph.

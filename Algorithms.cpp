@@ -49,93 +49,227 @@ bool Algorithms::isConnected(Graph graph)
     return true;
 }
 
+// This function finds the shortest path in a graph using different algorithms based on the graph's weight type
 string Algorithms::shortestPath(Graph &graph, int start, int end)
 {
+    // Get the weight type of the graph
     int weightType = graph.getWeightsType();
-    bool directedType = graph.getIsDirected();
+    // Get the number of vertices in the graph
     int numVertices = graph.getNumVertices();
+    // Get the adjacency matrix of the graph
     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix();
-    if (weightType == 0)
-    { // Unweighted graph
-        vector<int> prev(numVertices, -1);
-        vector<bool> visited(numVertices, false);
-        queue<int> q;
-        cout << "REACHED HERE FOR UNWEIGHTED GRAPH !\n" << endl;
-        visited[start] = true;
-        q.push(start);
-        prev[start] = start; // Mark the start vertex as visited
+    // Initialize the distance array with maximum integer value
+    vector<int> dist(numVertices, INT_MAX);
+    // Initialize the previous node array with -1
+    vector<int> prev(numVertices, -1);
+    // Initialize the visited array with false
+    vector<bool> visited(numVertices, false);
+    // Initialize the path vector
+    vector<int> path;
+    // Initialize the priority queue for Dijkstra's algorithm
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
+    // If the graph is unweighted
+    if (weightType == 0)
+    {
+        // Initialize the queue for BFS
+        queue<int> q;
+        // Mark the start vertex as visited
+        visited[start] = true;
+        // Add the start vertex to the queue
+        q.push(start);
+        // Set the previous node of the start vertex as itself
+        prev[start] = start;
+
+        // While the queue is not empty
         while (!q.empty())
         {
+            // Get the front vertex of the queue
             int current = q.front();
+            // Remove the front vertex from the queue
             q.pop();
 
+            // If the current vertex is the end vertex, break the loop
             if (current == end)
             {
                 break;
             }
 
+            // For each vertex in the graph
             for (int i = 0; i < numVertices; ++i)
             {
+                // If the current vertex is connected to the i-th vertex and the i-th vertex is not visited
                 if (adjacencyMatrix[current][i] != INT_MAX && !visited[i])
                 {
+                    // Add the i-th vertex to the queue
                     q.push(i);
+                    // Mark the i-th vertex as visited
                     visited[i] = true;
+                    // Set the previous node of the i-th vertex as the current vertex
                     prev[i] = current;
                 }
             }
         }
 
+        // If there is no path to the end vertex
         if (prev[end] == -1)
         {
             return "No path found";
         }
         else
         {
-            vector<int> path;
+            // Construct the path from the end vertex to the start vertex
             for (int v = end; v != start; v = prev[v])
             {
                 path.push_back(v);
             }
-            path.push_back(start); // Don't forget to add the start vertex
+            // Add the start vertex to the path
+            path.push_back(start);
+            // Reverse the path to get the correct order from start to end
             reverse(path.begin(), path.end());
-
-            string result = "";
-            for (size_t i = 0; i < path.size(); ++i)
-            {
-                if (i != 0)
-                {
-                    result += "->";
-                }
-                result += to_string(path[i]);
-            }
-
-            return result;
         }
-    } else if (weightType == 1 && directedType == false) {
-
-        // Undirected graph with positive weights 
-        // Use Dijkstra's algorithm
-        // You'll need to implement this part
-    } else if (weightType == 1 && directedType == true) { 
-        // Directed graph with positive weights
-        // Use Dijkstra's algorithm
-        // You'll need to implement this part
-
-    } else if (weightType == -1) {
-        // Graph with negative weights
-        // Use Bellman-Ford algorithm
-        // Your existing implementation goes here
     }
-    return "gay";
+    // If the graph has positive weights
+    else if (weightType == 1)
+    {
+        // Initialize the distance of the start vertex as 0
+        dist[start] = 0;
+        // Add the start vertex to the priority queue
+        pq.push({0, start});
+
+        // While the priority queue is not empty
+        while (!pq.empty())
+        {
+            // Get the vertex with the smallest distance
+            int u = pq.top().second;
+            // Remove the vertex from the priority queue
+            pq.pop();
+
+            // If the vertex has been visited, skip it
+            if (visited[u])
+                continue;
+
+            // Mark the vertex as visited
+            visited[u] = true;
+
+            // For each vertex in the graph
+            for (int v = 0; v < numVertices; ++v)
+            {
+                // If the u-th vertex is connected to the v-th vertex and the v-th vertex is not visited
+                if (adjacencyMatrix[u][v] != INT_MAX && !visited[v])
+                {
+                    // Calculate the new distance to the v-th vertex
+                    int newDist = dist[u] + adjacencyMatrix[u][v];
+                    // If the new distance is smaller than the current distance
+                    if (newDist < dist[v])
+                    {
+                        // Update the distance to the v-th vertex
+                        dist[v] = newDist;
+                        // Set the previous node of the v-th vertex as the u-th vertex
+                        prev[v] = u;
+                        // Add the v-th vertex to the priority queue
+                        pq.push({dist[v], v});
+                    }
+                }
+            }
+        }
+
+        // If there is no path to the end vertex
+        if (dist[end] == INT_MAX)
+        {
+            return "No path found";
+        }
+        else
+        {
+            // Construct the path from the end vertex to the start vertex
+            for (int v = end; v != -1; v = prev[v])
+            {
+                path.push_back(v);
+            }
+            // Reverse the path to get the correct order from start to end
+            reverse(path.begin(), path.end());
+        }
+    }
+    // If the graph has negative weights
+    else if (weightType == -1)
+    {
+        // Initialize the distance of the start vertex as 0
+        dist[start] = 0;
+
+        // For each vertex in the graph
+        for (int i = 0; i < numVertices; ++i)
+        {
+            // For each edge in the graph
+            for (int u = 0; u < numVertices; ++u)
+            {
+                for (int v = 0; v < numVertices; ++v)
+                {
+                    // If the u-th vertex is connected to the v-th vertex and the new distance to the v-th vertex is smaller
+                    if (adjacencyMatrix[u][v] != INT_MAX && dist[u] != INT_MAX && dist[u] + adjacencyMatrix[u][v] < dist[v])
+                    {
+                        // Update the distance to the v-th vertex
+                        dist[v] = dist[u] + adjacencyMatrix[u][v];
+                        // Set the previous node of the v-th vertex as the u-th vertex
+                        prev[v] = u;
+                    }
+                }
+            }
+        }
+
+        // Initialize the array to mark vertices reachable from a negative cycle
+        vector<bool> inNegativeCycle(numVertices, false);
+        // For each edge in the graph
+        for (int u = 0; u < numVertices; ++u)
+        {
+            for (int v = 0; v < numVertices; ++v)
+            {
+                // If the u-th vertex is connected to the v-th vertex and the new distance to the v-th vertex is smaller
+                if (adjacencyMatrix[u][v] != INT_MAX && dist[u] != INT_MAX && dist[u] + adjacencyMatrix[u][v] < dist[v])
+                {
+                    // Mark the v-th vertex as reachable from a negative cycle
+                    inNegativeCycle[v] = true;
+                }
+            }
+        }
+
+        // If there is no path to the end vertex
+        if (dist[end] == INT_MAX)
+        {
+            return "No path found from start to end vertex";
+        }
+        else
+        {
+            // Construct the path from the end vertex to the start vertex
+            for (int v = end; v != -1; v = prev[v])
+            {
+                // If the v-th vertex is reachable from a negative cycle, return an error message
+                if (inNegativeCycle[v])
+                {
+                    return "Path includes a vertex in a negative cycle";
+                }
+                path.push_back(v);
+            }
+            // Reverse the path to get the correct order from start to end
+            reverse(path.begin(), path.end());
+        }
+    }
+
+    // Generate the result string
+    string result = "";
+    // For each vertex in the path
+    for (size_t i = 0; i < path.size(); ++i)
+    {
+        // If the vertex is not the start vertex, add an arrow before it
+        if (i != 0)
+        {
+            result += "->";
+        }
+        // Add the vertex to the result string
+        result += to_string(path[i]);
+    }
+    // Return the result string
+    return result;
 }
-// } else if (weightType == 1) { // Graph with positive weights
-//         // Use Dijkstra's algorithm
-//         // You'll need to implement this part
-//     } else if (weightType == -1) { // Graph with negative weights
-//         // Use Bellman-Ford algorithm
-//         // Your existing implementation goes here
-//     }
 
 // string Algorithms::isBipartite(Graph &graph)
 // {

@@ -21,6 +21,21 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
             }
         }
 
+        // If the graph is undirected, check if the matrix is symmetric
+        if (!getIsDirected())
+        {
+            for (size_t i = 0; i < matrix.size(); ++i)
+            {
+                for (size_t j = 0; j < i; ++j)
+                {
+                    if (matrix[i][j] != matrix[j][i])
+                    {
+                        throw invalid_argument("Undirected graph can only load a symmetric matrix.");
+                    }
+                }
+            }
+        }
+
         // Load the adjacency matrix
         adjacencyMatrix.clear();
         adjacencyMatrix.resize(matrix.size(), vector<int>(matrix.size(), INT_MAX));
@@ -104,9 +119,9 @@ void Graph::printGraph()
 
 // check if the graph is directed or undirected
 // by comparing the adjacency matrix with its transpose
-void Graph::setIsDirected(bool value)
+void Graph::setIsDirected(bool type)
 {
-    this->isDirected = value;
+    this->isDirected = type;
 }
 
 void Graph::setWeightsType(int type)
