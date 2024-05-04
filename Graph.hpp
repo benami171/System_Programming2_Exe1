@@ -20,9 +20,9 @@ public:
     // inline Concstructor
     Graph(bool directed = false) : isDirected(directed) {}
 
-    void loadGraph(vector<vector<int>> &matrix);
-    
     void setIsDirected(bool type);
+
+    void loadGraph(vector<vector<int>> &matrix);
     
     bool getIsDirected();
         

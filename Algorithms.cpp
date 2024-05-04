@@ -60,7 +60,7 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
         vector<int> prev(numVertices, -1);
         vector<bool> visited(numVertices, false);
         queue<int> q;
-        cout << "REACHED HERE\n" << endl;
+        cout << "REACHED HERE FOR UNWEIGHTED GRAPH !\n" << endl;
         visited[start] = true;
         q.push(start);
         prev[start] = start; // Mark the start vertex as visited
@@ -112,6 +112,20 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
 
             return result;
         }
+    } else if (weightType == 1 && directedType == false) {
+
+        // Undirected graph with positive weights 
+        // Use Dijkstra's algorithm
+        // You'll need to implement this part
+    } else if (weightType == 1 && directedType == true) { 
+        // Directed graph with positive weights
+        // Use Dijkstra's algorithm
+        // You'll need to implement this part
+
+    } else if (weightType == -1) {
+        // Graph with negative weights
+        // Use Bellman-Ford algorithm
+        // Your existing implementation goes here
     }
     return "gay";
 }
