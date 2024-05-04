@@ -228,6 +228,8 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
                 {
                     // Mark the v-th vertex as reachable from a negative cycle
                     inNegativeCycle[v] = true;
+                    // Update the containsNegativeCycle field of the graph
+                    graph.setContainsNegativeCycle(true);
                 }
             }
         }
@@ -270,6 +272,58 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
     // Return the result string
     return result;
 }
+
+
+vector<int> getAdjVertices(int v, Graph& graph) {
+    vector<int> adjVertices;
+    vector<vector<int>> matrix = graph.getAdjacencyMatrix();
+    for(int i = 0; i < matrix[v].size(); i++) {
+        if(matrix[v][i] != INT_MAX) {
+            adjVertices.push_back(i);
+        }
+    }
+    return adjVertices;
+}
+
+bool isCyclicUtil(int v, vector<bool>& visited, vector<bool>& recStack, Graph& graph) {
+    if(!visited[v]) {
+        visited[v] = true;
+        recStack[v] = true;
+
+        vector<int> adjVertices = getAdjVertices(v, graph);
+        for(int i = 0; i < adjVertices.size(); i++) {
+            if (!visited[adjVertices[i]] && isCyclicUtil(adjVertices[i], visited, recStack, graph)) {
+                return true;
+            } else if (recStack[adjVertices[i]]) {
+                return true;
+            }
+        }
+    }
+    recStack[v] = false;
+    return false;
+}
+
+bool isContainsCycle(Graph& graph) {
+    int numVertices = graph.getNumVertices();
+    bool isContainsNegativeCycle = graph.getContainsNegativeCycle();
+    if(numVertices < 3){
+        return false;
+    }
+    if(isContainsNegativeCycle){
+        return true;
+    }
+    vector<bool> visited(numVertices, false);
+    vector<bool> recStack(numVertices, false);
+
+    for(int i = 0; i < numVertices; i++) {
+        if (isCyclicUtil(i, visited, recStack, graph)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 // string Algorithms::isBipartite(Graph &graph)
 // {

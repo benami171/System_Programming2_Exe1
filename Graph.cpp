@@ -117,6 +117,15 @@ void Graph::printGraph()
     cout << "Graph with " << numVertices << " vertices and " << edges << " edges." << endl;
 }
 
+void Graph::setContainsNegativeCycle(bool flag)
+{
+    this->containsNegativeCycle = flag;
+}
+
+bool Graph::getContainsNegativeCycle()
+{
+    return this->containsNegativeCycle;
+}
 // check if the graph is directed or undirected
 // by comparing the adjacency matrix with its transpose
 void Graph::setIsDirected(bool type)

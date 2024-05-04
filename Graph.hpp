@@ -21,7 +21,11 @@ public:
     // inline Concstructor
     Graph(bool directed = false) : isDirected(directed) {}
 
-    void setIsDirected(bool type);
+    void setContainsNegativeCycle(bool flag);
+
+    bool getContainsNegativeCycle();
+
+    void setIsDirected(bool flag);
 
     void loadGraph(vector<vector<int>> &matrix);
     
