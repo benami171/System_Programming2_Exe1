@@ -13,6 +13,7 @@ class Graph {
 private:
     vector<vector<int>> adjacencyMatrix;
     bool isDirected; // false for undirected, true for directed
+    bool containsNegativeCycle;
     int isWeighted; // -1 for negative weight, 0 for no weight, 1 for positive weight
     size_t numVertices;
 
