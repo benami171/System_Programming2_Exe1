@@ -273,28 +273,36 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
     return result;
 }
 
-
-vector<int> getAdjVertices(int v, Graph& graph) {
+vector<int> getAdjVertices(int v, Graph &graph)
+{
     vector<int> adjVertices;
     vector<vector<int>> matrix = graph.getAdjacencyMatrix();
-    for(int i = 0; i < matrix[v].size(); i++) {
-        if(matrix[v][i] != INT_MAX) {
+    for (int i = 0; i < matrix[v].size(); i++)
+    {
+        if (matrix[v][i] != INT_MAX)
+        {
             adjVertices.push_back(i);
         }
     }
     return adjVertices;
 }
 
-bool isCyclicUtil(int v, vector<bool>& visited, vector<bool>& recStack, Graph& graph) {
-    if(!visited[v]) {
+bool isCyclicUtil(int v, vector<bool> &visited, vector<bool> &recStack, Graph &graph)
+{
+    if (!visited[v])
+    {
         visited[v] = true;
         recStack[v] = true;
 
         vector<int> adjVertices = getAdjVertices(v, graph);
-        for(int i = 0; i < adjVertices.size(); i++) {
-            if (!visited[adjVertices[i]] && isCyclicUtil(adjVertices[i], visited, recStack, graph)) {
+        for (int i = 0; i < adjVertices.size(); i++)
+        {
+            if (!visited[adjVertices[i]] && isCyclicUtil(adjVertices[i], visited, recStack, graph))
+            {
                 return true;
-            } else if (recStack[adjVertices[i]]) {
+            }
+            else if (recStack[adjVertices[i]])
+            {
                 return true;
             }
         }
@@ -303,28 +311,111 @@ bool isCyclicUtil(int v, vector<bool>& visited, vector<bool>& recStack, Graph& g
     return false;
 }
 
-bool isContainsCycle(Graph& graph) {
+bool isContainsCycle(Graph &graph)
+{
     int numVertices = graph.getNumVertices();
     bool isContainsNegativeCycle = graph.getContainsNegativeCycle();
-    if(numVertices < 3){
+    if (numVertices < 3)
+    {
         return false;
     }
-    if(isContainsNegativeCycle){
+    if (isContainsNegativeCycle)
+    {
         return true;
     }
     vector<bool> visited(numVertices, false);
     vector<bool> recStack(numVertices, false);
 
-    for(int i = 0; i < numVertices; i++) {
-        if (isCyclicUtil(i, visited, recStack, graph)) {
+    for (int i = 0; i < numVertices; i++)
+    {
+        if (isCyclicUtil(i, visited, recStack, graph))
+        {
             return true;
         }
     }
     return false;
 }
 
+string isBipartite(Graph graph)
+{
+    int numVertices = graph.getNumVertices();
+    vector<int> colorArr(numVertices, -1);
+    vector<int> set1, set2;
 
+    for (int i = 0; i < numVertices; i++)
+    {
+        if (colorArr[i] == -1)
+        {
+            if (!isBipartiteUtil(graph, i, colorArr, set1, set2))
+            {
+                return "Graph is not bipartite";
+            }
+        }
+    }
 
+    string set1Str = "A = {";
+    for (int i = 0; i < set1.size(); i++)
+    {
+        set1Str += to_string(set1[i]);
+        if (i != set1.size() - 1)
+        {
+            set1Str += ",";
+        }
+    }
+    set1Str += "}";
+
+    string set2Str = " B = {";
+    for (int i = 0; i < set2.size(); i++)
+    {
+        set2Str += to_string(set2[i]);
+        if (i != set2.size() - 1)
+        {
+            set2Str += ",";
+        }
+    }
+    set2Str += "}";
+
+    return set1Str + set2Str;
+}
+
+bool isBipartiteUtil(Graph graph, int src, vector<int> &colorArr, vector<int> &set1, vector<int> &set2)
+{
+    colorArr[src] = 1;
+    set1.push_back(src);
+    queue<int> q;
+    q.push(src);
+
+    while (!q.empty())
+    {
+        int u = q.front();
+        q.pop();
+
+        vector<int> adjVertices = getAdjVertices(u, graph);
+        for (int i = 0; i < adjVertices.size(); i++)
+        {
+            int v = adjVertices[i];
+
+            if (colorArr[v] == -1)
+            {
+                colorArr[v] = 1 - colorArr[u];
+                q.push(v);
+                if (colorArr[v] == 1)
+                {
+                    set1.push_back(v);
+                }
+                else
+                {
+                    set2.push_back(v);
+                }
+            }
+            else if (colorArr[v] == colorArr[u])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 // string Algorithms::isBipartite(Graph &graph)
 // {
 //     size_t numVertices = graph.getNumVertices();
