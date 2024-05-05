@@ -100,6 +100,18 @@ int main()
     cout << Algorithms::isConnected(g1) << endl;        // should return 1
     cout << Algorithms::shortestPath(g1, 2, 1) << endl; // should return 0->1->2    
 
+    vector<vector<int>> graph22 = {
+        {INT_MAX,      3,      6,INT_MAX},
+
+        {INT_MAX,INT_MAX,INT_MAX,      3},
+
+        {INT_MAX,     -8,INT_MAX,      3},
+
+        {INT_MAX,INT_MAX,      2,INT_MAX}};
+    g1.loadGraph(graph22);
+    g1.printGraph();
+    cout << Algorithms::isNegativeCycle(g1) << endl; // should return the graph has a negative cycle
+
     return 0;
 
     // // 3x3 matrix that represents a connected graph.
