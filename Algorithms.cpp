@@ -195,14 +195,14 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, int start, int end, ve
     return make_pair(prev, inNegativeCycle);
 }
 
-// This function finds the shortest path in a graph using different algorithms based on the graph's weight type
 string Algorithms::shortestPath(Graph &graph, int start, int end)
 {
-    vector<bool> inNegativeCycle;
     // Get the weight type of the graph
     int weightType = graph.getWeightsType();
     // Get the number of vertices in the graph
     int numVertices = graph.getNumVertices();
+    // Initialize the inNegativeCycle vector with false
+    vector<bool> inNegativeCycle(numVertices, false);
     // Get the adjacency matrix of the graph
     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix();
     // Initialize the distance array with maximum integer value
@@ -230,9 +230,19 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
         inNegativeCycle = result.second;
     }
 
+    // If the end vertex is reachable from a negative cycle, return "NO PATH FROM START TO END"
+    if (inNegativeCycle[end])
+    {
+        return "NO PATH FROM START TO END";
+    }
     // Generate the shortest path
     for (int v = end; v != start; v = prev[v])
     {
+        // Check if prev[v] is a valid index
+        if (prev[v] < 0 || prev[v] >= prev.size())
+        {
+            return "NO PATH FROM START TO END";
+        }
         path.push_back(v);
     }
     path.push_back(start);
@@ -270,7 +280,7 @@ vector<int> getAdjVertices(int v, Graph &graph)
     return adjVertices;
 }
 
-bool isCyclicUtil(int v, vector<bool> &visited, vector<bool> &recStack, Graph &graph)
+bool isCyclicUtil(int v, int parent, vector<bool> &visited, vector<bool> &recStack, Graph &graph)
 {
     if (!visited[v])
     {
@@ -280,11 +290,11 @@ bool isCyclicUtil(int v, vector<bool> &visited, vector<bool> &recStack, Graph &g
         vector<int> adjVertices = getAdjVertices(v, graph);
         for (int i = 0; i < adjVertices.size(); i++)
         {
-            if (!visited[adjVertices[i]] && isCyclicUtil(adjVertices[i], visited, recStack, graph))
+            if (!visited[adjVertices[i]] && isCyclicUtil(adjVertices[i], v, visited, recStack, graph))
             {
                 return true;
             }
-            else if (recStack[adjVertices[i]])
+            else if (recStack[adjVertices[i]] && adjVertices[i] != parent)
             {
                 return true;
             }
@@ -311,7 +321,7 @@ bool Algorithms::isContainsCycle(Graph &graph)
 
     for (int i = 0; i < numVertices; i++)
     {
-        if (isCyclicUtil(i, visited, recStack, graph))
+        if (!visited[i] && isCyclicUtil(i, -1, visited, recStack, graph))
         {
             return true;
         }
@@ -319,11 +329,43 @@ bool Algorithms::isContainsCycle(Graph &graph)
     return false;
 }
 
-string Algorithms::isBipartite(Graph graph) {
+vector<vector<int>> convertToUndirected(Graph &graph) {
+    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix(); // Original adjacency matrix
+    vector<vector<int>> newAdjMatrix = adjMatrix; // Copy of the adjacency matrix
+    int numVertices = graph.getNumVertices();
+
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = i+1; j < numVertices; j++) {
+            if (newAdjMatrix[i][j] != INT_MAX && newAdjMatrix[j][i] != INT_MAX) {
+                // If there are edges in both directions, take the average of the two weights
+                newAdjMatrix[i][j] = newAdjMatrix[j][i] = (newAdjMatrix[i][j] + newAdjMatrix[j][i]) / 2;
+            } else if (newAdjMatrix[i][j] != INT_MAX) {
+                // If there's only an edge from i to j, use its weight for the edge from j to i
+                newAdjMatrix[j][i] = newAdjMatrix[i][j];
+            } else if (newAdjMatrix[j][i] != INT_MAX) {
+                // If there's only an edge from j to i, use its weight for the edge from i to j
+                newAdjMatrix[i][j] = newAdjMatrix[j][i];
+            }
+        }
+    }
+
+    return newAdjMatrix;
+}
+
+string Algorithms::isBipartite(Graph &graph) {
     size_t numVertices = graph.getNumVertices();
     vector<int> colorArr(numVertices, -1);
     vector<vector<int>> groups(2);
-    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+    vector<vector<int>> adjMatrix;
+
+    // Check if the graph is directed
+    if (graph.getIsDirected()) {
+        // If the graph is directed, convert it to undirected
+        adjMatrix = convertToUndirected(graph);
+    } else {
+        // If the graph is undirected, use its adjacency matrix as is
+        adjMatrix = graph.getAdjacencyMatrix();
+    }
 
     for (size_t i = 0; i < numVertices; i++) {
         if (colorArr[i] == -1) {
@@ -339,35 +381,35 @@ string Algorithms::isBipartite(Graph graph) {
                 for (size_t v = 0; v < numVertices; v++) {
                     if (adjMatrix[node][v] && colorArr[v] == -1) {
                         colorArr[v] = 1 - colorArr[node];
-                        q.push(v);
                         groups[colorArr[v]].push_back(v);
+                        q.push(v);
                     } else if (adjMatrix[node][v] && colorArr[v] == colorArr[node]) {
-                        return "Graph is not bipartite";
+                        return "Graph is not Bipartite";
                     }
                 }
             }
         }
     }
 
-    string set1Str = "A = {";
-    for (size_t i = 0; i < groups[0].size(); i++) {
-        set1Str += to_string(groups[0][i]);
+    // If we reach here, then all vertices can be colored with alternate color
+    // So, we return the two sets of vertices
+    string result = "Graph is Bipartite and those are the two sets: ";
+    result += "A={";
+    for (int i = 0; i < groups[0].size(); i++) {
+        result += to_string(groups[0][i]);
         if (i != groups[0].size() - 1) {
-            set1Str += ",";
+            result += ",";
         }
     }
-    set1Str += "}";
-
-    string set2Str = " B = {";
-    for (size_t i = 0; i < groups[1].size(); i++) {
-        set2Str += to_string(groups[1][i]);
+    result += "} B={";
+    for (int i = 0; i < groups[1].size(); i++) {
+        result += to_string(groups[1][i]);
         if (i != groups[1].size() - 1) {
-            set2Str += ",";
+            result += ",";
         }
     }
-    set2Str += "}";
-
-    return set1Str + set2Str;
+    result += "}";
+    return result;
 }
 
 string Algorithms::isNegativeCycle(Graph graph){
@@ -386,5 +428,3 @@ string Algorithms::isNegativeCycle(Graph graph){
         return "The graph does not contain a negative cycle";
     }
 }
-
-

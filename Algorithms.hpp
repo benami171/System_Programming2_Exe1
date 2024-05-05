@@ -14,7 +14,7 @@ class Algorithms
         static bool isConnected(Graph graph);
         static string shortestPath(Graph& graph, int start, int end);
         static bool isContainsCycle(Graph& graph);
-        static string isBipartite(Graph graph);
+        static string isBipartite(Graph& graph);
         static string isNegativeCycle(Graph graph);
 
 };
