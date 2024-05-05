@@ -390,69 +390,34 @@ string isBipartite(Graph graph) {
 
     return set1Str + set2Str;
 }
-// string Algorithms::isBipartite(Graph &graph)
-// {
-//     size_t numVertices = graph.getNumVertices();
-//     vector<int> color(numVertices, -1);
-//     vector<size_t> setA, setB;
 
-//     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
+// option to consider in the future
 
-//     for (size_t i = 0; i < numVertices; ++i)
-//     {
-//         if (color[i] == -1)
-//         {
-//             queue<size_t> q;
-//             q.push(i);
-//             color[i] = 1;
+// void DFS(Graph &graph, int v, vector<int> &colorArr, bool &isBipartite) {
+//     for (int u : graph.getAdjacencyList()[v]) {
+//         if (colorArr[u] == -1) {
+//             colorArr[u] = 1 - colorArr[v];
+//             DFS(graph, u, colorArr, isBipartite);
+//         } else if (colorArr[u] == colorArr[v]) {
+//             isBipartite = false;
+//         }
+//     }
+// }
 
-//             while (!q.empty())
-//             {
-//                 size_t current = q.front();
-//                 q.pop();
+// string isBipartite(Graph graph) {
+//     int numVertices = graph.getNumVertices();
+//     vector<int> colorArr(numVertices, -1);
+//     bool isBipartite = true;
 
-//                 for (size_t j = 0; j < numVertices; ++j)
-//                 {
-//                     if (adjacencyMatrix[current][j])
-//                     {
-//                         if (color[j] == -1)
-//                         {
-//                             color[j] = 1 - color[current];
-//                             q.push(j);
-//                         }
-//                         else if (color[j] == color[current])
-//                         {
-//                             return "No, the graph is not bipartite.";
-//                         }
-//                     }
-//                 }
+//     for (int i = 0; i < numVertices; i++) {
+//         if (colorArr[i] == -1) {
+//             colorArr[i] = 1;
+//             DFS(graph, i, colorArr, isBipartite);
+//             if (!isBipartite) {
+//                 return "Graph is not bipartite";
 //             }
 //         }
 //     }
 
-//     for (size_t i = 0; i < numVertices; ++i)
-//     {
-//         if (color[i] == 0)
-//             setA.push_back(i);
-//         else
-//             setB.push_back(i);
-//     }
-
-//     string result = "The graph is bipartite: A={";
-//     for (size_t i = 0; i < setA.size(); ++i)
-//     {
-//         result += to_string(setA[i]);
-//         if (i != setA.size() - 1)
-//             result += ", ";
-//     }
-//     result += "}, B={";
-//     for (size_t i = 0; i < setB.size(); ++i)
-//     {
-//         result += to_string(setB[i]);
-//         if (i != setB.size() - 1)
-//             result += ", ";
-//     }
-//     result += "}.";
-
-//     return result;
+//     // ... rest of your function ...
 // }
