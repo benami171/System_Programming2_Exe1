@@ -391,6 +391,21 @@ string isBipartite(Graph graph) {
     return set1Str + set2Str;
 }
 
+string isNegativeCycle(Graph graph){
+    if (graph.getContainsNegativeCycle())
+    {
+        return "The graph contains a negative cycle";
+    }
+    if (graph.getWeightsType() != -1)
+    {
+        return "The graph does not contain a negative cycle";
+    }
+    string helper = Algorithms::shortestPath(graph, 0, 0);
+    if(graph.getContainsNegativeCycle()){
+        return "The graph contains a negative cycle";
+    }
+}
+
 // option to consider in the future
 
 // void DFS(Graph &graph, int v, vector<int> &colorArr, bool &isBipartite) {
