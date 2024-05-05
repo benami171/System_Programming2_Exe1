@@ -2,7 +2,7 @@
  * Demo program for Exercise 2.
  * Author: Benjamin Saldman.
  */
-
+#define NO_EDGE 0
 #include "Graph.hpp"
 #include "Algorithms.hpp"
 using ariel::Algorithms;
@@ -18,9 +18,9 @@ int main()
 {
     ariel::Graph g1;
     vector<vector<int>> graph1 = {
-        {INT_MAX, 1, INT_MAX},
-        {1, INT_MAX, INT_MAX},
-        {INT_MAX, INT_MAX, INT_MAX}};
+        {NO_EDGE, 1, NO_EDGE},
+        {1, NO_EDGE, NO_EDGE},
+        {NO_EDGE, NO_EDGE, NO_EDGE}};
 
     g1.loadGraph(graph1);
     g1.printGraph(); // should return Graph with 3 vertices and 1 edges
@@ -34,9 +34,9 @@ int main()
 
     g1.setIsDirected(true);
     vector<vector<int>> graph2 = {
-        {INT_MAX, 1, INT_MAX},
-        {1, INT_MAX, 1},
-        {INT_MAX, 1, INT_MAX}};
+        {NO_EDGE, 1, NO_EDGE},
+        {1, NO_EDGE, 1},
+        {NO_EDGE, 1, NO_EDGE}};
 
     g1.loadGraph(graph2);
     g1.printGraph(); // should return Graph with 3 vertices and 4 edges
@@ -48,13 +48,13 @@ int main()
 
 
     // vector<vector<int>> graph3 = {
-    //     {INT_MAX,       2,   INT_MAX,      9},
+    //     {NO_EDGE,       2,   NO_EDGE,      9},
 
-    //     {      2, INT_MAX,         3,      4},
+    //     {      2, NO_EDGE,         3,      4},
 
-    //     {INT_MAX,       3,   INT_MAX,      3},
+    //     {NO_EDGE,       3,   NO_EDGE,      3},
 
-    //     {      9,       4,         3,INT_MAX}};
+    //     {      9,       4,         3,NO_EDGE}};
 
     // g1.setIsDirected(false);
     // g1.loadGraph(graph3);
@@ -70,13 +70,13 @@ int main()
     //     // NEGATIVE WEIGHTS
     //     // NO NEGATIVECYCLE
     //  vector<vector<int>> graph4 = {
-    //     {INT_MAX,      3,      6,INT_MAX},
+    //     {NO_EDGE,      3,      6,NO_EDGE},
 
-    //     {INT_MAX,INT_MAX,INT_MAX,      3},
+    //     {NO_EDGE,NO_EDGE,NO_EDGE,      3},
 
-    //     {INT_MAX,     -8,INT_MAX,      3},
+    //     {NO_EDGE,     -8,NO_EDGE,      3},
 
-    //     {INT_MAX,INT_MAX,INT_MAX,INT_MAX}};
+    //     {NO_EDGE,NO_EDGE,NO_EDGE,NO_EDGE}};
 
     // g1.loadGraph(graph4);
     // g1.printGraph();                                    // should return Graph with 4 vertices and 5 edges
@@ -89,17 +89,17 @@ int main()
     //     // NEGATIVE WEIGHT
     //     // NEGATIVE CYCLE
     //     vector<vector<int>> graph5 = {
-    //     {INT_MAX,      3,      6,INT_MAX,      2,INT_MAX},
+    //     {NO_EDGE,      3,      6,NO_EDGE,      2,NO_EDGE},
 
-    //     {INT_MAX,INT_MAX,INT_MAX,      3,INT_MAX,INT_MAX},
+    //     {NO_EDGE,NO_EDGE,NO_EDGE,      3,NO_EDGE,NO_EDGE},
 
-    //     {INT_MAX,     -8,INT_MAX,      3,INT_MAX,      5},
+    //     {NO_EDGE,     -8,NO_EDGE,      3,NO_EDGE,      5},
 
-    //     {INT_MAX,INT_MAX,      2,INT_MAX,INT_MAX,INT_MAX},
+    //     {NO_EDGE,NO_EDGE,      2,NO_EDGE,NO_EDGE,NO_EDGE},
 
-    //     {INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,      3},
+    //     {NO_EDGE,NO_EDGE,NO_EDGE,NO_EDGE,NO_EDGE,      3},
 
-    //     {INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX,INT_MAX}};
+    //     {NO_EDGE,NO_EDGE,NO_EDGE,NO_EDGE,NO_EDGE,NO_EDGE}};
 
     // g1.loadGraph(graph5);
     // g1.printGraph();
@@ -109,22 +109,22 @@ int main()
     // cout << Algorithms::shortestPath(g1, 0, 4) << endl; // should return 0->4
     // cout << Algorithms::shortestPath(g1, 0, 5) << endl; // should return 0->4->5
     //     vector<vector<int>> graph6 = {
-    //         {INT_MAX,5,INT_MAX},
-    //         {INT_MAX,INT_MAX,-11},
-    //         {5,INT_MAX,INT_MAX}};
+    //         {NO_EDGE,5,NO_EDGE},
+    //         {NO_EDGE,NO_EDGE,-11},
+    //         {5,NO_EDGE,NO_EDGE}};
     // g1.loadGraph(graph6);
     // g1.printGraph();
     // cout << Algorithms::isConnected(g1) << endl;        // should return 1
     // cout << Algorithms::shortestPath(g1, 2, 1) << endl; // should return 0->1->2    
 
     // vector<vector<int>> graph7 = {
-    //     {INT_MAX,      3,      6,INT_MAX},
+    //     {NO_EDGE,      3,      6,NO_EDGE},
 
-    //     {INT_MAX,INT_MAX,INT_MAX,      3},
+    //     {NO_EDGE,NO_EDGE,NO_EDGE,      3},
 
-    //     {INT_MAX,     -8,INT_MAX,      3},
+    //     {NO_EDGE,     -8,NO_EDGE,      3},
 
-    //     {INT_MAX,INT_MAX,      2,INT_MAX}};
+    //     {NO_EDGE,NO_EDGE,      2,NO_EDGE}};
     // g1.loadGraph(graph7);
     // g1.printGraph();
     // cout << Algorithms::isNegativeCycle(g1) << endl; // should return the graph has a negative cycle

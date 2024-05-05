@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include "Graph.hpp"
 #include <climits>
+#define NO_EDGE 0
 
 using namespace std;
 using namespace ariel;
@@ -38,14 +39,14 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
 
         // Load the adjacency matrix
         adjacencyMatrix.clear();
-        adjacencyMatrix.resize(matrix.size(), vector<int>(matrix.size(), INT_MAX));
+        adjacencyMatrix.resize(matrix.size(), vector<int>(matrix.size(), NO_EDGE));
         bool hasNegativeWeights = false;
         bool hasPositiveWeights = false;
         for (size_t i = 0; i < matrix.size(); ++i)
         {
             for (size_t j = 0; j < matrix[i].size(); ++j)
             {
-                if (matrix[i][j] != INT_MAX)
+                if (matrix[i][j] != NO_EDGE)
                 {
                     adjacencyMatrix[i][j] = matrix[i][j];
                     if (matrix[i][j] < 0)
@@ -74,7 +75,7 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
             {
                 for (size_t j = 0; j < matrix[i].size(); ++j)
                 {
-                    if (matrix[i][j] != INT_MAX && matrix[i][j] != 0 && matrix[i][j] != 1)
+                    if (matrix[i][j] != NO_EDGE && matrix[i][j] != 0 && matrix[i][j] != 1)
                     {
                         isUnweighted = false;
                         break;
@@ -104,7 +105,7 @@ void Graph::printGraph()
     {
         for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j)
         {
-            if (i != j && adjacencyMatrix[i][j] != INT_MAX)
+            if (i != j && adjacencyMatrix[i][j] != NO_EDGE)
             {
                 ++edges;
             }

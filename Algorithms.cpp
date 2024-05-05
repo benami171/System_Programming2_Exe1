@@ -1,5 +1,6 @@
 // NAME: GAL BEN AMI
 
+#define NO_EDGE 0
 #include <climits>
 #include "Algorithms.hpp"
 #include "Graph.hpp"
@@ -32,7 +33,7 @@ bool Algorithms::isConnected(Graph graph)
 
         for (size_t i = 0; i < numVertices; ++i)
         {
-            if (adjacencyMatrix[current][i] != INT_MAX && !visited[i])
+            if (adjacencyMatrix[current][i] != NO_EDGE && !visited[i])
             {
                 q.push(i);
                 visited[i] = true;
@@ -80,7 +81,7 @@ vector<int> BFS(Graph &graph, int start, int end, vector<int>& prev, int numVert
         for (int i = 0; i < numVertices; ++i)
         {
             // If the current vertex is connected to the i-th vertex and the i-th vertex is not visited
-            if (adjacencyMatrix[current][i] != INT_MAX && !visited[i])
+            if (adjacencyMatrix[current][i] != NO_EDGE && !visited[i])
             {
                 // Add the i-th vertex to the queue
                 q.push(i);
@@ -127,7 +128,7 @@ vector<int>  Dijkstra(Graph &graph, int start, int end, vector<int>& dist, vecto
         for (int v = 0; v < numVertices; ++v)
         {
             // If the u-th vertex is connected to the v-th vertex and the v-th vertex is not visited
-            if (adjacencyMatrix[u][v] != INT_MAX && !visited[v])
+            if (adjacencyMatrix[u][v] != NO_EDGE && !visited[v])
             {
                 // Calculate the new distance to the v-th vertex
                 int newDist = dist[u] + adjacencyMatrix[u][v];
@@ -163,7 +164,7 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, int start, int end, ve
             for (int v = 0; v < numVertices; ++v)
             {
                 // If the u-th vertex is connected to the v-th vertex and the new distance to the v-th vertex is smaller
-                if (adjacencyMatrix[u][v] != INT_MAX && dist[u] != INT_MAX && dist[u] + adjacencyMatrix[u][v] < dist[v])
+                if (adjacencyMatrix[u][v] != NO_EDGE && dist[u] != NO_EDGE && dist[u] + adjacencyMatrix[u][v] < dist[v])
                 {
                     // Update the distance to the v-th vertex
                     dist[v] = dist[u] + adjacencyMatrix[u][v];
@@ -182,7 +183,7 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, int start, int end, ve
         for (int v = 0; v < numVertices; ++v)
         {
             // If the u-th vertex is connected to the v-th vertex and the new distance to the v-th vertex is smaller
-            if (adjacencyMatrix[u][v] != INT_MAX && dist[u] != INT_MAX && dist[u] + adjacencyMatrix[u][v] < dist[v])
+            if (adjacencyMatrix[u][v] != NO_EDGE && dist[u] != NO_EDGE && dist[u] + adjacencyMatrix[u][v] < dist[v])
             {
                 // Mark the v-th vertex as reachable from a negative cycle
                 inNegativeCycle[v] = true;
@@ -206,7 +207,7 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
     // Get the adjacency matrix of the graph
     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix();
     // Initialize the distance array with maximum integer value
-    vector<int> dist(numVertices, INT_MAX);
+    vector<int> dist(numVertices, NO_EDGE);
     // Initialize the previous node array with -1
     vector<int> prev(numVertices, -1);
     // Initialize the path vector
@@ -272,7 +273,7 @@ vector<int> getAdjVertices(int v, Graph &graph)
     vector<vector<int>> matrix = graph.getAdjacencyMatrix();
     for (int i = 0; i < matrix[v].size(); i++)
     {
-        if (matrix[v][i] != INT_MAX)
+        if (matrix[v][i] != NO_EDGE)
         {
             adjVertices.push_back(i);
         }
@@ -336,13 +337,13 @@ vector<vector<int>> convertToUndirected(Graph &graph) {
 
     for (int i = 0; i < numVertices; i++) {
         for (int j = i+1; j < numVertices; j++) {
-            if (newAdjMatrix[i][j] != INT_MAX && newAdjMatrix[j][i] != INT_MAX) {
+            if (newAdjMatrix[i][j] != NO_EDGE && newAdjMatrix[j][i] != NO_EDGE) {
                 // If there are edges in both directions, take the average of the two weights
                 newAdjMatrix[i][j] = newAdjMatrix[j][i] = (newAdjMatrix[i][j] + newAdjMatrix[j][i]) / 2;
-            } else if (newAdjMatrix[i][j] != INT_MAX) {
+            } else if (newAdjMatrix[i][j] != NO_EDGE) {
                 // If there's only an edge from i to j, use its weight for the edge from j to i
                 newAdjMatrix[j][i] = newAdjMatrix[i][j];
-            } else if (newAdjMatrix[j][i] != INT_MAX) {
+            } else if (newAdjMatrix[j][i] != NO_EDGE) {
                 // If there's only an edge from j to i, use its weight for the edge from i to j
                 newAdjMatrix[i][j] = newAdjMatrix[j][i];
             }
@@ -371,19 +372,19 @@ string Algorithms::isBipartite(Graph &graph) {
         if (colorArr[i] == -1) {
             queue<int> q;
             q.push(i);
-            colorArr[i] = 1;
-            groups[0].push_back(i);
+            colorArr[i] = 1; // Color the first vertex with color 1
+            groups[1].push_back(i); // Push it to group 1
 
             while (!q.empty()) {
                 int node = q.front();
                 q.pop();
 
                 for (size_t v = 0; v < numVertices; v++) {
-                    if (adjMatrix[node][v] && colorArr[v] == -1) {
-                        colorArr[v] = 1 - colorArr[node];
-                        groups[colorArr[v]].push_back(v);
+                    if (adjMatrix[node][v] != NO_EDGE && colorArr[v] == -1) {
+                        colorArr[v] = 1 - colorArr[node]; // Color the vertex with the opposite color of its neighbor
+                        groups[colorArr[v]].push_back(v); // Push it to the corresponding group
                         q.push(v);
-                    } else if (adjMatrix[node][v] && colorArr[v] == colorArr[node]) {
+                    } else if (adjMatrix[node][v] != NO_EDGE && colorArr[v] == colorArr[node]) {
                         return "Graph is not Bipartite";
                     }
                 }
