@@ -75,6 +75,29 @@ int main()
     cout << Algorithms::isBipartite(g1) << endl;
     cout << Algorithms::isContainsCycle(g1) << endl;
 
+    g1.setIsDirected(true);
+    // a graph that has a negative cycle and is bipartit (e.g. A={0,3,2,6} B={1,4,5,})
+    vector<vector<int>> graph5 = {
+    //  0  1  2  3  4  5  6
+    {  0, 3, 0, 0, 0, 0, 0}, // 0
+    {  0, 0, 4, 0, 0, 0, 0}, // 1
+    {  0, 0, 0, 0, 4, 0, 0}, // 2
+    {  0,-2, 0, 0, 0, 0, 0}, // 3
+    {  0, 0, 0, 0, 0, 0, 5}, // 4
+    { -2, 0, 0,-6, 0, 0, 0}, // 5
+    {  0, 0, 0, 0, 0, 0, 0}  // 6
+};
+
+    g1.loadGraph(graph5);
+    g1.printGraph();
+    cout << Algorithms::isConnected(g1) << endl; // should return yes
+    cout << Algorithms::shortestPath(g1, 0, 6) << endl; // should return 0->1->2->4->6
+    cout << Algorithms::shortestPath(g1, 3, 5) << endl; // should return no path from 3 to 5
+    cout << Algorithms::isNegativeCycle(g1) << endl;
+    cout << Algorithms::isBipartite(g1) << endl;
+    cout << Algorithms::isContainsCycle(g1) << endl;
+
+
     return 0;
 
 }
