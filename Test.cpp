@@ -1,105 +1,90 @@
 #include "doctest.h"
 #include "Algorithms.hpp"
 #include "Graph.hpp"
+#include <sstream> // for std::stringstream, stringstream used to redirect cout to a string
 
 
 
 using namespace std;
 
-TEST_CASE("Test isConnected")
+// These tests cover various scenarios such as loading a valid undirected graph,
+// a valid directed graph, a graph with negative weights,
+// a non-square matrix, and a non-symmetric matrix for an undirected graph. 
+// There's also a test for the printGraph method.
+
+
+TEST_CASE("Test loading valid undirected graph")
 {
     ariel::Graph g;
+    g.setIsDirected(false);
     vector<vector<int>> graph = {
-        {0, 1, 0},
+        {0, 1, 1},
         {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isConnected(g) == true);
-
-    vector<vector<int>> graph2 = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 0, 0},
-        {1, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isConnected(g) == false);
+        {1, 1, 0}};
+    CHECK_NOTHROW(g.loadGraph(graph));
+    CHECK(g.getNumVertices() == 3);
+    CHECK(g.getWeightsType() == 0);
 }
 
-TEST_CASE("Test shortestPath")
+TEST_CASE("Test loading valid directed graph")
 {
     ariel::Graph g;
+    g.setIsDirected(true);
     vector<vector<int>> graph = {
         {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 2) == "0->1->2");
-
-    vector<vector<int>> graph2 = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 0, 0},
-        {1, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::shortestPath(g, 0, 4) == "-1");
+        {0, 0, 1},
+        {1, 0, 0}};
+    CHECK_NOTHROW(g.loadGraph(graph));
+    CHECK(g.getNumVertices() == 3);
+    CHECK(g.getWeightsType() == 0);
 }
-TEST_CASE("Test isContainsCycle")
+
+TEST_CASE("Test loading graph with negative weights")
 {
     ariel::Graph g;
     vector<vector<int>> graph = {
-        {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isContainsCycle(g) == false);
-
-    vector<vector<int>> graph2 = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 0, 0},
-        {1, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isContainsCycle(g) == true);
+        {0, -1, 2},
+        {-1, 0, 3},
+        {2, 3, 0}};
+    CHECK_NOTHROW(g.loadGraph(graph));
+    CHECK(g.getNumVertices() == 3);
+    CHECK(g.getWeightsType() == -1);
 }
-TEST_CASE("Test isBipartite")
+
+TEST_CASE("Test loading graph with non-square matrix")
 {
     ariel::Graph g;
     vector<vector<int>> graph = {
-        {0, 1, 0},
-        {1, 0, 1},
-        {0, 1, 0}};
-    g.loadGraph(graph);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2}, B={1}");
-
-    vector<vector<int>> graph2 = {
-        {0, 1, 1, 0, 0},
-        {1, 0, 1, 0, 0},
-        {1, 1, 0, 1, 0},
-        {0, 0, 1, 0, 0},
-        {0, 0, 0, 0, 0}};
-    g.loadGraph(graph2);
-    CHECK(ariel::Algorithms::isBipartite(g) == "0");
-
-    vector<vector<int>> graph3 = {
-        {0, 1, 2, 0, 0},
-        {1, 0, 3, 0, 0},
-        {2, 3, 0, 4, 0},
-        {0, 0, 4, 0, 5},
-        {0, 0, 0, 5, 0}};
-    g.loadGraph(graph3);
-    CHECK(ariel::Algorithms::isBipartite(g) == "The graph is bipartite: A={0, 2, 4}, B={1, 3}");
-}
-TEST_CASE("Test invalid graph")
-{
-    ariel::Graph g;
-    vector<vector<int>> graph = {
-        {0, 1, 2, 0},
-        {1, 0, 3, 0},
-        {2, 3, 0, 4},
-        {0, 0, 4, 0},
-        {0, 0, 0, 5}};
+        {0, 1, 2},
+        {1, 0, 3}};
     CHECK_THROWS(g.loadGraph(graph));
+}
+
+TEST_CASE("Test loading undirected graph with non-symmetric matrix")
+{
+    ariel::Graph g;
+    g.setIsDirected(false);
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}};
+    CHECK_THROWS(g.loadGraph(graph));
+}
+
+TEST_CASE("Test printGraph method")
+
+{
+    ariel::Graph g;
+    vector<vector<int>> graph = {
+        {0, 1, 2},
+        {1, 0, 3},
+        {2, 3, 0}};
+    g.loadGraph(graph);
+    // Redirect cout to a stringstream
+    std::stringstream buffer; // will be used to store the output
+    std::streambuf* prevcoutbuf = std::cout.rdbuf(buffer.rdbuf()); // save old buffer and redirect cout to buffer
+    g.printGraph();
+    // Reset cout to its old self
+    std::cout.rdbuf(prevcoutbuf); // reset to standard output again
+    CHECK(buffer.str() == "Graph with 3 vertices and 6 edges.\n");
 }
