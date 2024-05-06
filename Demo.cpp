@@ -74,13 +74,6 @@ int main()
     cout << Algorithms::isNegativeCycle(g1) << endl;    
     cout << Algorithms::isBipartite(g1) << endl;
     cout << Algorithms::isContainsCycle(g1) << endl;
-    
-
-        
-
-
-
-
 
     return 0;
 
