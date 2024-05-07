@@ -6,6 +6,7 @@
 #include <climits>
 #define NO_EDGE 0
 
+
 using namespace std;
 using namespace ariel;
 
