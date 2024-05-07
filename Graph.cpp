@@ -10,7 +10,7 @@
 using namespace std;
 using namespace ariel;
 
-void Graph::loadGraph(vector<vector<int>> &matrix)
+void ariel::Graph::loadGraph(vector<vector<int>> &matrix)
 {
     if (!matrix.empty())
     {
@@ -99,7 +99,7 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
     }
 }
 
-void Graph::printGraph()
+void ariel::Graph::printGraph()
 {
     int edges = 0;
     for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
@@ -119,43 +119,43 @@ void Graph::printGraph()
     cout << "Graph with " << numVertices << " vertices and " << edges << " edges." << endl;
 }
 
-void Graph::setContainsNegativeCycle(bool flag)
+void ariel::Graph::setContainsNegativeCycle(bool flag)
 {
     this->containsNegativeCycle = flag;
 }
 
-bool Graph::getContainsNegativeCycle()
+bool ariel::Graph::getContainsNegativeCycle()
 {
     return this->containsNegativeCycle;
 }
 // check if the graph is directed or undirected
 // by comparing the adjacency matrix with its transpose
-void Graph::setIsDirected(bool type)
+void ariel::Graph::setIsDirected(bool type)
 {
     this->isDirected = type;
 }
 
-void Graph::setWeightsType(int type)
+void ariel::Graph::setWeightsType(int type)
 {
     this->isWeighted = type;
 }
 
-size_t Graph::getNumVertices()
+size_t ariel::Graph::getNumVertices()
 {
     return numVertices;
 }
 
-vector<vector<int>> Graph::getAdjacencyMatrix()
+vector<vector<int>> ariel::Graph::getAdjacencyMatrix()
 {
     return adjacencyMatrix;
 }
 
-bool Graph::getIsDirected()
+bool ariel::Graph::getIsDirected()
 {
     return this->isDirected;
 }
 
-int Graph::getWeightsType()
+int ariel::Graph::getWeightsType()
 {
     return this->isWeighted;
 }

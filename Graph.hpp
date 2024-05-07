@@ -20,18 +20,18 @@ private:
 public:
     Graph(bool directed = false) : isDirected(directed) {}
     // inline Constructor
+    
+    void setWeightsType(int type);
+    
+    int getWeightsType();
+
+    void printGraph();
 
     bool getContainsNegativeCycle();
 
     void loadGraph(vector<vector<int>> &matrix);
     
     bool getIsDirected();
-        
-    void setWeightsType(int type);
-    
-    int getWeightsType();
-
-    void printGraph();
 
     size_t getNumVertices();
 
