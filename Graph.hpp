@@ -18,12 +18,10 @@ private:
     size_t numVertices;
 
 public:
-    // inline Concstructor
-    void setIsDirected(bool flag);
+    Graph(bool directed = false) : isDirected(directed) {}
+    // inline Constructor
 
     bool getContainsNegativeCycle();
-
-    void setContainsNegativeCycle(bool flag);
 
     void loadGraph(vector<vector<int>> &matrix);
     
@@ -37,9 +35,11 @@ public:
 
     size_t getNumVertices();
 
-    vector<vector<int>> getAdjacencyMatrix();
+    void setContainsNegativeCycle(bool flag);
+    
+    void setIsDirected(bool type);
 
-    Graph(bool directed = false) : isDirected(directed) {}
+    vector<vector<int>> getAdjacencyMatrix();
 
 };
 }
