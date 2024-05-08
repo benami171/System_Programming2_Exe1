@@ -10,6 +10,20 @@
 
 using namespace ariel;
 
+vector<int> getAdjVertices(int v, Graph &graph)
+{
+    vector<int> adjVertices;
+    vector<vector<int>> matrix = graph.getAdjacencyMatrix();
+    for (int i = 0; i < matrix[v].size(); i++)
+    {
+        if (matrix[v][i] != 0) // Consider non-zero values as edges
+        {
+            adjVertices.push_back(i);
+        }
+    }
+    return adjVertices;
+}
+
 bool Algorithms::isConnected(Graph graph)
 {
     size_t numVertices = graph.getNumVertices();
@@ -196,6 +210,47 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, int start, int end, ve
     return make_pair(prev, inNegativeCycle);
 }
 
+
+pair<pair<stack<int>, vector<int>>, pair<int, int>> Algorithms::DFS(Graph &g, stack<int> &orderOfVertices) {
+    int numVertices = g.getAdjacencyMatrix().size();
+    vector<bool> visited(numVertices, false);
+    vector<int> parent(numVertices, -1);
+
+    while (!orderOfVertices.empty()) {
+        int v = orderOfVertices.top();
+        orderOfVertices.pop();
+        if (!visited[v]) {
+            pair<int, int> cycle = DFSUtil(g, v, visited, parent);
+            if (cycle.first != -1) {
+                // A cycle was found
+                return make_pair(make_pair(orderOfVertices, parent), cycle);
+            }
+        }
+    }
+
+    // No cycle was found
+    return make_pair(make_pair(orderOfVertices, parent), make_pair(-1, -1));
+}
+
+pair<int, int> Algorithms::DFSUtil(Graph &g, int v, vector<bool> &visited, vector<int> &parent) {
+    visited[v] = true;
+    vector<int> adjVertices = getAdjVertices(v, g);
+
+    for (int u : adjVertices) {
+        if (!visited[u]) {
+            parent[u] = v;
+            return DFSUtil(g, u, visited, parent);
+        } else if (parent[v] != u) {
+            // A back edge was found, indicating a cycle
+            return make_pair(u, v);
+        }
+    }
+
+    // No cycle was found from this vertex
+    return make_pair(-1, -1);
+}
+
+
 string Algorithms::shortestPath(Graph &graph, int start, int end)
 {
     // Get the weight type of the graph
@@ -267,68 +322,85 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
 }
 
 
-vector<int> getAdjVertices(int v, Graph &graph)
-{
-    vector<int> adjVertices;
-    vector<vector<int>> matrix = graph.getAdjacencyMatrix();
-    for (int i = 0; i < matrix[v].size(); i++)
-    {
-        if (matrix[v][i] != NO_EDGE)
-        {
-            adjVertices.push_back(i);
+enum Color {WHITE, GRAY, BLACK};
+
+
+bool Algorithms::isContainsCycle(Graph& graph) {
+    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+    size_t numVertices = adjMatrix.size();
+    vector<Color> color(numVertices, WHITE);
+
+    for (size_t startVertex = 0; startVertex < numVertices; ++startVertex) {
+        if (color[startVertex] != WHITE) // Vertex already visited
+            continue;
+
+        stack<int> dfsStack;
+        dfsStack.push(startVertex);
+
+        while (!dfsStack.empty()) {
+            int v = dfsStack.top();
+            dfsStack.pop();
+
+            if (color[v] == GRAY) // Found a cycle
+                return true;
+
+            color[v] = GRAY;
+
+            for (size_t i = 0; i < numVertices; ++i) {
+                if (adjMatrix[v][i] != NO_EDGE) { // Edge exists
+                    if (color[i] == WHITE) { // Not visited
+                        dfsStack.push(i);
+                    }
+                }
+            }
+
+            color[v] = BLACK; // Finished visiting neighbors
         }
     }
-    return adjVertices;
-}
 
-bool isCyclicUtil(int v, int parent, vector<bool> &visited, vector<bool> &recStack, Graph &graph)
-{
-    if (!visited[v])
-    {
-        visited[v] = true;
-        recStack[v] = true;
-
-        vector<int> adjVertices = getAdjVertices(v, graph);
-        for (int i = 0; i < adjVertices.size(); i++)
-        {
-            if (!visited[adjVertices[i]] && isCyclicUtil(adjVertices[i], v, visited, recStack, graph))
-            {
-                return true;
-            }
-            else if (recStack[adjVertices[i]] && adjVertices[i] != parent)
-            {
-                return true;
-            }
-        }
-    }
-    recStack[v] = false;
     return false;
 }
 
-bool Algorithms::isContainsCycle(Graph &graph)
-{
-    int numVertices = graph.getNumVertices();
-    bool isContainsNegativeCycle = graph.getContainsNegativeCycle();
-    if (numVertices < 3)
-    {
-        return false;
-    }
-    if (isContainsNegativeCycle)
-    {
-        return true;
-    }
-    vector<bool> visited(numVertices, false);
-    vector<bool> recStack(numVertices, false);
 
-    for (int i = 0; i < numVertices; i++)
-    {
-        if (!visited[i] && isCyclicUtil(i, -1, visited, recStack, graph))
-        {
-            return true;
-        }
-    }
-    return false;
-}
+// enum Color {WHITE, GRAY, BLACK};
+
+// bool isCyclicUtil(int v, vector<Color> &color, vector<vector<int>> &adjMatrix) {
+//     color[v] = GRAY;
+
+//     for (size_t i = 0; i < adjMatrix[v].size(); i++) {
+//         if (adjMatrix[v][i] != NO_EDGE) {
+//             if (color[i] == WHITE) {
+//                 if (isCyclicUtil(i, color, adjMatrix)) {
+//                     return true;
+//                 }
+//             } else if (color[i] == GRAY) {
+//                 return true;
+//             }
+//         }
+//     }
+
+//     color[v] = BLACK;
+//     return false;
+// }
+
+// bool Algorithms::isContainsCycle(Graph &graph) {
+//     size_t numVertices = graph.getNumVertices();
+//     cout << numVertices << endl;
+//     vector<Color> color(numVertices, WHITE);
+//     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+    
+
+
+//     for (size_t i = 0; i < numVertices; i++) {
+//         if (color[i] == WHITE) {
+//             if (isCyclicUtil(i, color, adjMatrix)) {
+//                 return true;
+//             }
+//         }
+//     }
+
+//     return false;
+// }
 
 vector<vector<int>> convertToUndirected(Graph &graph) {
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix(); // Original adjacency matrix
@@ -372,8 +444,8 @@ string Algorithms::isBipartite(Graph &graph) {
         if (colorArr[i] == -1) {
             queue<int> q;
             q.push(i);
-            colorArr[i] = 1; // Color the first vertex with color 1
-            groups[1].push_back(i); // Push it to group 1
+            colorArr[i] = groups[0].empty() ? 0 : 1; // Color the first vertex with color 0 if group 0 is empty, else color it with 1
+            groups[colorArr[i]].push_back(i); // Push it to the corresponding group
 
             while (!q.empty()) {
                 int node = q.front();

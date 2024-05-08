@@ -1,12 +1,12 @@
 #!make -f
 
 CXX=clang++
-CXXFLAGS=-std=c++11 -Werror -Wsign-conversion
+CXXFLAGS=-std=c++11 -Werror 
 VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
 
 COMMON_SOURCES=Graph.cpp Algorithms.cpp 
 DEMO_SOURCES=Demo.cpp $(COMMON_SOURCES)
-TEST_SOURCES=TestCounter.cpp Test.cpp $(COMMON_SOURCES)
+TEST_SOURCES=TestCounter.cpp BarakTest.cpp $(COMMON_SOURCES)
 
 DEMO_OBJECTS=$(subst .cpp,.o,$(DEMO_SOURCES))
 TEST_OBJECTS=$(subst .cpp,.o,$(TEST_SOURCES))
