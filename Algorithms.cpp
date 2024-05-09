@@ -326,70 +326,140 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
 }
 
 
-bool directedIsCyclicUtil(int v, vector<bool>& visited, vector<bool>& recursionStack, ariel::Graph& graph) {
-    visited[v] = true;
-    recursionStack[v] = true;
+// bool directedIsCyclicUtil(int v, vector<bool>& visited, vector<bool>& recursionStack, ariel::Graph& graph) {
+//     visited[v] = true;
+//     recursionStack[v] = true;
+
+//     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+//     for(int i = 0; i < adjMatrix[v].size(); i++) {
+//         if (!visited[i] && adjMatrix[v][i] != 0 && directedIsCyclicUtil(i, visited, recursionStack, graph)) {
+//             return true;
+//         } else if (recursionStack[i]) {
+//             return true;
+//         }
+//     }
+
+//     recursionStack[v] = false;  // remove the vertex from recursion stack
+//     return false;
+// }
+
+// bool directedIsContainsCycle(Graph& graph) {
+//     size_t numVertices = graph.getNumVertices();
+//     vector<bool> visited(numVertices, false);
+//     vector<bool> recursionStack(numVertices, false);
+
+//     for(size_t i = 0; i < numVertices; i++) {
+//         if (!visited[i]) {
+//             if (directedIsCyclicUtil(i, visited, recursionStack, graph)) {
+//                 return true;
+//             }
+//         }
+//     }
+//     return false;
+// }
+
+// bool undirectedIsCyclicUtil(int v, vector<bool>& visited, Graph& graph, int parent = -1) {
+//     visited[v] = true;
+
+//     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+//     for(int i = 0; i < adjMatrix[v].size(); i++) {
+//         if (adjMatrix[v][i] != NO_EDGE) {
+//             if (!visited[i]) {
+//                 if (undirectedIsCyclicUtil(i, visited, graph, v)) {
+//                     return true;
+//                 }
+//             } else if (i != parent) {
+//                 return true;
+//             }
+//         }
+//     }
+
+//     return false;
+// }
+
+
+// bool undirectedIsContainsCycle(Graph& graph) {
+//     size_t numVertices = graph.getNumVertices();
+//     vector<bool> visited(numVertices, false);
+
+//     for(size_t i = 0; i < numVertices; i++) {
+//         if (!visited[i]) {
+//             if (undirectedIsCyclicUtil(i, visited, graph, i)) {
+//                 return true;
+//             }
+//         }
+//     }
+//     return false;
+// }
+
+// bool Algorithms::isContainsCycle(Graph& graph) {
+//     if(graph.getNumVertices() < 2) return false;
+//     if(graph.getIsDirected() == true){
+//         return directedIsContainsCycle(graph);
+//     } else {
+//         return undirectedIsContainsCycle(graph);
+//     }    
+// }
+
+
+enum Color {WHITE, GRAY, BLACK};
+
+bool DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d, vector<int>& f, int& time, Graph& graph) {
+    color[u] = GRAY;
+    time++;
+    d[u] = time;
+    bool isDirected = graph.getIsDirected();
 
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
-    for(int i = 0; i < adjMatrix[v].size(); i++) {
-        if (!visited[i] && adjMatrix[v][i] != 0 && directedIsCyclicUtil(i, visited, recursionStack, graph)) {
-            return true;
-        } else if (recursionStack[i]) {
-            return true;
+    for(int v = 0; v < adjMatrix[u].size(); v++) {
+        if (adjMatrix[u][v] != NO_EDGE) {
+            if (color[v] == WHITE) {
+                parent[v] = u;
+                if (DFSVisit(v, color, parent, d, f, time, graph)) {
+                    return true;  // cycle detected
+                }
+            } else if (color[v] == GRAY) {
+                if (!isDirected && parent[u] == v) {
+                    continue;  // cycle detected
+                }
+                return true;  // cycle detected
+            }
         }
     }
 
-    recursionStack[v] = false;  // remove the vertex from recursion stack
-    return false;
+    color[u] = BLACK;
+    time++;
+    f[u] = time;
+
+    return false;  // no cycle detected
+}
+
+bool DFS(Graph& graph) {
+    size_t numVertices = graph.getNumVertices();
+    vector<Color> color(numVertices, WHITE);
+    vector<int> parent(numVertices, -1);
+    vector<int> d(numVertices, 0);  // discovery time
+    vector<int> f(numVertices, 0);  // finishing time
+
+    int time = 0;
+
+    for(size_t u = 0; u < numVertices; u++) {
+        if (color[u] == WHITE) {
+            if (DFSVisit(u, color, parent, d, f, time, graph)) {
+                return true;  // cycle detected
+            }
+        }
+    }
+
+    return false;  // no cycle detected
 }
 
 bool directedIsContainsCycle(Graph& graph) {
-    size_t numVertices = graph.getNumVertices();
-    vector<bool> visited(numVertices, false);
-    vector<bool> recursionStack(numVertices, false);
-
-    for(size_t i = 0; i < numVertices; i++) {
-        if (!visited[i]) {
-            if (directedIsCyclicUtil(i, visited, recursionStack, graph)) {
-                return true;
-            }
-        }
-    }
-    return false;
+    return DFS(graph);
 }
-
-bool undirectedIsCyclicUtil(int v, vector<bool>& visited, Graph& graph, int parent = -1) {
-    visited[v] = true;
-
-    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
-    for(int i = 0; i < adjMatrix[v].size(); i++) {
-        if (adjMatrix[v][i] != NO_EDGE) {
-            if (!visited[i]) {
-                if (undirectedIsCyclicUtil(i, visited, graph, v)) {
-                    return true;
-                }
-            } else if (i != parent) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
 
 bool undirectedIsContainsCycle(Graph& graph) {
-    size_t numVertices = graph.getNumVertices();
-    vector<bool> visited(numVertices, false);
-
-    for(size_t i = 0; i < numVertices; i++) {
-        if (!visited[i]) {
-            if (undirectedIsCyclicUtil(i, visited, graph, i)) {
-                return true;
-            }
-        }
-    }
-    return false;
+    return DFS(graph);
 }
 
 bool Algorithms::isContainsCycle(Graph& graph) {
