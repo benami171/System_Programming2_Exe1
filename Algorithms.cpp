@@ -6,8 +6,11 @@
 #include "Graph.hpp"
 #include <queue>
 #include <limits>
+#include <vector>
+#include <set>
 #include <algorithm>
 
+using namespace std;
 using namespace ariel;
 
 vector<int> getAdjVertices(int v, Graph &graph)
@@ -63,6 +66,7 @@ bool Algorithms::isConnected(Graph graph)
 
     return true;
 }
+
 // BFS function
 vector<int> BFS(Graph &graph, int start, int end, vector<int>& prev, int numVertices, vector<vector<int>>& adjacencyMatrix)
 {
@@ -322,39 +326,51 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
 }
 
 
-enum Color {WHITE, GRAY, BLACK};
+bool directedIsCyclicUtil(int v, vector<bool>& visited, vector<bool>& recursionStack, ariel::Graph& graph) {
+    visited[v] = true;
+    recursionStack[v] = true;
 
-
-bool Algorithms::isContainsCycle(Graph& graph) {
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
-    size_t numVertices = adjMatrix.size();
-    vector<Color> color(numVertices, WHITE);
+    for(int i = 0; i < adjMatrix[v].size(); i++) {
+        if (!visited[i] && adjMatrix[v][i] != 0 && directedIsCyclicUtil(i, visited, recursionStack, graph)) {
+            return true;
+        } else if (recursionStack[i]) {
+            return true;
+        }
+    }
 
-    for (size_t startVertex = 0; startVertex < numVertices; ++startVertex) {
-        if (color[startVertex] != WHITE) // Vertex already visited
-            continue;
+    recursionStack[v] = false;  // remove the vertex from recursion stack
+    return false;
+}
 
-        stack<int> dfsStack;
-        dfsStack.push(startVertex);
+bool directedIsContainsCycle(Graph& graph) {
+    size_t numVertices = graph.getNumVertices();
+    vector<bool> visited(numVertices, false);
+    vector<bool> recursionStack(numVertices, false);
 
-        while (!dfsStack.empty()) {
-            int v = dfsStack.top();
-            dfsStack.pop();
-
-            if (color[v] == GRAY) // Found a cycle
+    for(size_t i = 0; i < numVertices; i++) {
+        if (!visited[i]) {
+            if (directedIsCyclicUtil(i, visited, recursionStack, graph)) {
                 return true;
-
-            color[v] = GRAY;
-
-            for (size_t i = 0; i < numVertices; ++i) {
-                if (adjMatrix[v][i] != NO_EDGE) { // Edge exists
-                    if (color[i] == WHITE) { // Not visited
-                        dfsStack.push(i);
-                    }
-                }
             }
+        }
+    }
+    return false;
+}
 
-            color[v] = BLACK; // Finished visiting neighbors
+bool undirectedIsCyclicUtil(int v, vector<bool>& visited, Graph& graph, int parent = -1) {
+    visited[v] = true;
+
+    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+    for(int i = 0; i < adjMatrix[v].size(); i++) {
+        if (adjMatrix[v][i] != NO_EDGE) {
+            if (!visited[i]) {
+                if (undirectedIsCyclicUtil(i, visited, graph, v)) {
+                    return true;
+                }
+            } else if (i != parent) {
+                return true;
+            }
         }
     }
 
@@ -362,45 +378,28 @@ bool Algorithms::isContainsCycle(Graph& graph) {
 }
 
 
-// enum Color {WHITE, GRAY, BLACK};
+bool undirectedIsContainsCycle(Graph& graph) {
+    size_t numVertices = graph.getNumVertices();
+    vector<bool> visited(numVertices, false);
 
-// bool isCyclicUtil(int v, vector<Color> &color, vector<vector<int>> &adjMatrix) {
-//     color[v] = GRAY;
+    for(size_t i = 0; i < numVertices; i++) {
+        if (!visited[i]) {
+            if (undirectedIsCyclicUtil(i, visited, graph, i)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
-//     for (size_t i = 0; i < adjMatrix[v].size(); i++) {
-//         if (adjMatrix[v][i] != NO_EDGE) {
-//             if (color[i] == WHITE) {
-//                 if (isCyclicUtil(i, color, adjMatrix)) {
-//                     return true;
-//                 }
-//             } else if (color[i] == GRAY) {
-//                 return true;
-//             }
-//         }
-//     }
-
-//     color[v] = BLACK;
-//     return false;
-// }
-
-// bool Algorithms::isContainsCycle(Graph &graph) {
-//     size_t numVertices = graph.getNumVertices();
-//     cout << numVertices << endl;
-//     vector<Color> color(numVertices, WHITE);
-//     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
-    
-
-
-//     for (size_t i = 0; i < numVertices; i++) {
-//         if (color[i] == WHITE) {
-//             if (isCyclicUtil(i, color, adjMatrix)) {
-//                 return true;
-//             }
-//         }
-//     }
-
-//     return false;
-// }
+bool Algorithms::isContainsCycle(Graph& graph) {
+    if(graph.getNumVertices() < 2) return false;
+    if(graph.getIsDirected() == true){
+        return directedIsContainsCycle(graph);
+    } else {
+        return undirectedIsContainsCycle(graph);
+    }    
+}
 
 vector<vector<int>> convertToUndirected(Graph &graph) {
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix(); // Original adjacency matrix

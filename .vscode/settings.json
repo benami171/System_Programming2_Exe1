@@ -4,5 +4,17 @@
         "iosfwd": "cpp",
         "climits": "cpp",
         "iostream": "cpp"
-    }
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/benami/ss2course/System_Programming2_Exe1",
+            "binaryPath": "/home/benami/ss2course/System_Programming2_Exe1/test",
+            "binaryArgs": []
+        },
+        {
+            "cwd": "/home/benami/ss2course/System_Programming2_Exe1",
+            "binaryPath": "/home/benami/ss2course/System_Programming2_Exe1/demo",
+            "binaryArgs": []
+        }
+    ]
 }
