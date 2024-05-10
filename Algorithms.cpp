@@ -293,19 +293,23 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
     // If the end vertex is reachable from a negative cycle, return "NO PATH FROM START TO END"
     if (inNegativeCycle[end])
     {
-        return "NO PATH FROM START TO END";
+        return "PATH GOES THROUGH NEGATIVE CYCLE";
     }
     // Generate the shortest path
+    // loop is going back from the end vertex to the start vertex.
     for (int v = end; v != start; v = prev[v])
     {
         // Check if prev[v] is a valid index
         if (prev[v] < 0 || prev[v] >= prev.size())
         {
-            return "NO PATH FROM START TO END";
+            return "invalide index";
         }
         path.push_back(v);
     }
+    // adding the start vertex to the end of the path 
+    // because the loop was adding in reverse.
     path.push_back(start);
+    // Reverse the path to get the correct order
     reverse(path.begin(), path.end());
 
     // Generate the result string
