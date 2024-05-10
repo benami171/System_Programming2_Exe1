@@ -101,6 +101,7 @@ void ariel::Graph::loadGraph(vector<vector<int>> &matrix)
 
 void ariel::Graph::printGraph()
 {
+    bool type = getIsDirected();
     int edges = 0;
     for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
     {
@@ -115,8 +116,11 @@ void ariel::Graph::printGraph()
     if (isDirected == false)
     { // if the graph is undirected
         edges /= 2;
+            cout << "Undirected graph with " << numVertices << " vertices and " << edges << " edges." << endl;
+
+    } else {
+        cout << "Directed graph with " << numVertices << " vertices and " << edges << " edges." << endl;
     }
-    cout << "Graph with " << numVertices << " vertices and " << edges << " edges." << endl;
 }
 
 void ariel::Graph::setContainsNegativeCycle(bool flag)
