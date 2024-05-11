@@ -301,7 +301,6 @@ bool DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d, 
     color[(size_t)u] = GRAY;
     time++;
     d[(size_t)u] = time;
-    bool isDirected = graph.getIsDirected();
 
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
     for(size_t v = 0; v < adjMatrix[(size_t)u].size(); v++) {
@@ -312,8 +311,8 @@ bool DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d, 
                     return true;  // cycle detected
                 }
             } else if (color[v] == GRAY) {
-                if (!isDirected && parent[(size_t)u] == v) {
-                    continue;  // cycle detected
+                if (!graph.getIsDirected() && parent[(size_t)u] == v) {
+                    continue;
                 }
                 return true;  // cycle detected
             }

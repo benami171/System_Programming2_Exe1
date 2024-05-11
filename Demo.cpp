@@ -27,9 +27,9 @@ int main()
     g1.loadGraph(graph1);
     g1.printGraph(); // should return Graph with 3 vertices and 1 edges
     cout << Algorithms::isConnected(g1) << endl; // should return 0
-    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return NO PATH FROM START TO END
-    cout << Algorithms::isNegativeCycle(g1) << endl; // should return the graph has no negative cycle
-    cout << Algorithms::isBipartite(g1) << endl;    // should return the graph is bipartite
+    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return No path found
+    cout << Algorithms::isNegativeCycle(g1) << endl; // should return The graph does not contain a negative cycle
+    cout << Algorithms::isBipartite(g1) << endl;    // should return Graph is Bipartite and those are the two sets: A={0} B={1,2}
     cout << Algorithms::isContainsCycle(g1) << endl;    // should return 0
     cout << "" << endl;
 
