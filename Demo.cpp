@@ -20,32 +20,31 @@ int main()
         {0, 1, 0},
         {1, 0, 0},
         {0, 0, 0}};
-    
 
     cout << "GRAPH 1:" << endl;
 
     g1.loadGraph(graph1);
-    g1.printGraph(); // should return Graph with 3 vertices and 1 edges
-    cout << Algorithms::isConnected(g1) << endl; // should return 0
+    g1.printGraph();                                    // should return Graph with 3 vertices and 1 edges
+    cout << Algorithms::isConnected(g1) << endl;        // should return 0
     cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return No path found
-    cout << Algorithms::isNegativeCycle(g1) << endl; // should return The graph does not contain a negative cycle
-    cout << Algorithms::isBipartite(g1) << endl;    // should return Graph is Bipartite and those are the two sets: A={0} B={1,2}
+    cout << Algorithms::isNegativeCycle(g1) << endl;    // should return The graph does not contain a negative cycle
+    cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is Bipartite and those are the two sets: A={0} B={1,2}
     cout << Algorithms::isContainsCycle(g1) << endl;    // should return 0
     cout << "" << endl;
 
     g1.setIsDirected(true);
     vector<vector<int>> graph2 = {
-        {0,       1, 0},
-        {      1, 0,       1},
-        {0,       1, 0}};
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
 
     cout << "GRAPH 2:" << endl;
     g1.loadGraph(graph2);
-    g1.printGraph(); // should return Graph with 3 vertices and 4 edges
+    g1.printGraph();                                    // should return Graph with 3 vertices and 4 edges
     cout << Algorithms::isConnected(g1) << endl;        // should return 1
-    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return 0->1->2
-    cout << Algorithms::isNegativeCycle(g1) << endl;    // should return the graph has no negative cycle
-    cout << Algorithms::isBipartite(g1) << endl;        // should return the graph is bipartite
+    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return 0 -> 1 -> 2
+    cout << Algorithms::isNegativeCycle(g1) << endl;    // should return The graph does not contain a negative cycle
+    cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is Bipartite and those are the two sets: A={0,2} B={1}
     cout << Algorithms::isContainsCycle(g1) << endl;    // should return 1
 
     vector<vector<int>> graph3 = {
@@ -55,51 +54,49 @@ int main()
 
     cout << "GRAPH 3:" << endl;
     g1.loadGraph(graph3);
-    g1.printGraph(); // should return Graph with 3 vertices and 6 edges
+    g1.printGraph();                                    // should return Directed graph with 3 vertices and 6 edges.
     cout << Algorithms::isConnected(g1) << endl;        // should return 1
-    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return 0->2
-    cout << Algorithms::isNegativeCycle(g1) << endl;    // should return the graph has no negative cycle
-    cout << Algorithms::isBipartite(g1) << endl;        // should return the graph is  not bipartite
+    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return 0 -> 2
+    cout << Algorithms::isNegativeCycle(g1) << endl;    // should return The graph does not contain a negative cycle
+    cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is not Bipartite
     cout << Algorithms::isContainsCycle(g1) << endl;    // should return 1
 
     g1.setIsDirected(false);
     vector<vector<int>> graph4 = {
-        {0,      1,     -1,      5},
-        {      1,0,      3,      5},
-        {     -1,      3,0,     -5},
-        {      5,      5,     -5,0}};
+        {0, 1, -1, 5},
+        {1, 0, 3, 5},
+        {-1, 3, 0, -5},
+        {5, 5, -5, 0}};
     cout << "GRAPH 4:" << endl;
     g1.loadGraph(graph4);
-    g1.printGraph();                                    // Undirected graph with 4 vert and 6 edg 
+    g1.printGraph();                                    // should return Undirected graph with 4 vertices and 6 edges.
     cout << Algorithms::isConnected(g1) << endl;        // should return 1
-    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return  
-    cout << Algorithms::isNegativeCycle(g1) << endl;    
-    cout << Algorithms::isBipartite(g1) << endl;
-    cout << Algorithms::isContainsCycle(g1) << endl;
+    cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return Negative cycle detected
+    cout << Algorithms::isNegativeCycle(g1) << endl;    // should return The graph contains a negative cycle
+    cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is not Bipartite
+    cout << Algorithms::isContainsCycle(g1) << endl;    // should return 1
 
-//     g1.setIsDirected(true);
-//     // a graph that has a negative cycle and is bipartit (e.g. A={0,3,2,6} B={1,4,5,})
-//     vector<vector<int>> graph5 = {
-//     //  0  1  2  3  4  5  6
-//     {  0, 3, 0, 0, 0, 0, 0}, // 0
-//     {  0, 0, 4, 0, 0, 0, 0}, // 1
-//     {  0, 0, 0, 0, 4, 0, 0}, // 2
-//     {  0,-2, 0, 0, 0, 0, 0}, // 3
-//     {  0, 0, 0, 0, 0, 0, 5}, // 4
-//     { -2, 0, 0,-6, 0, 0, 0}, // 5
-//     {  0, 0, 0, 0, 0, 0, 0}  // 6
-// };
+        g1.setIsDirected(true);
+        // a graph that has a negative cycle and is bipartit (e.g. A={0,3,2,6} B={1,4,5,})
+        vector<vector<int>> graph5 = {
+        // 1  2  3  4  5  6  7
+        {  0, 3, 0, 0, 0, 0, 0}, // 1
+        {  0, 0, 4, 0, 0, 0, 0}, // 2
+        {  0, 0, 0, 0, 4, 0, 0}, // 3
+        {  0,-2, 0, 0, 0, 0, 0}, // 4
+        {  0, 0, 0, 0, 0, 0, 5}, // 5
+        { -2, 0, 0,-6, 0, 0, 0}, // 6
+        {  0, 0, 0, 0, 0, 0, 0}  // 7
+    };
 
-//     g1.loadGraph(graph5);
-//     g1.printGraph();
-//     cout << Algorithms::isConnected(g1) << endl; // should return yes
-//     cout << Algorithms::shortestPath(g1, 0, 6) << endl; // should return 0->1->2->4->6
-//     cout << Algorithms::shortestPath(g1, 3, 5) << endl; // should return no path from 3 to 5
-//     cout << Algorithms::isNegativeCycle(g1) << endl;
-//     cout << Algorithms::isBipartite(g1) << endl;
-//     cout << Algorithms::isContainsCycle(g1) << endl;
-
+        g1.loadGraph(graph5);
+        g1.printGraph();                                    // should return Directed graph with 7 vertices and 7 edges.
+        cout << Algorithms::isConnected(g1) << endl;        // should return 0
+        cout << Algorithms::shortestPath(g1, 0, 6) << endl; // should return 0 -> 1 -> 2 -> 4 -> 6
+        cout << Algorithms::shortestPath(g1, 3, 5) << endl; // should return No path found
+        cout << Algorithms::isNegativeCycle(g1) << endl;    // should return The graph contains a negative cycle
+        cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is Bipartite and those are the two sets: A={0,2,3,6} B={1,5,4}
+        cout << Algorithms::isContainsCycle(g1) << endl;    // should return 0
 
     return 0;
-
 }
