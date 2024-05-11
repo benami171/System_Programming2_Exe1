@@ -89,6 +89,7 @@ int main()
         {  0, 0, 0, 0, 0, 0, 0}  // 7
     };
 
+        cout << "GRAPH 5:" << endl;
         g1.loadGraph(graph5);
         g1.printGraph();                                    // should return Directed graph with 7 vertices and 7 edges.
         cout << Algorithms::isConnected(g1) << endl;        // should return 0
@@ -96,7 +97,9 @@ int main()
         cout << Algorithms::shortestPath(g1, 3, 5) << endl; // should return No path found
         cout << Algorithms::isNegativeCycle(g1) << endl;    // should return The graph contains a negative cycle
         cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is Bipartite and those are the two sets: A={0,2,3,6} B={1,5,4}
-        cout << Algorithms::isContainsCycle(g1) << endl;    // should return 0
+        cout << Algorithms::isContainsCycle(g1) << endl;    // should return No Cycle detected
+
+
 
     return 0;
 }

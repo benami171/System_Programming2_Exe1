@@ -7,10 +7,7 @@
 
 using namespace std;
 
-// These tests cover various scenarios such as loading a valid undirected graph,
-// a valid directed graph, a graph with negative weights,
-// a non-square matrix, and a non-symmetric matrix for an undirected graph. 
-// There's also a test for the printGraph method.
+
 
 
 TEST_CASE("Test loading valid undirected graph")
