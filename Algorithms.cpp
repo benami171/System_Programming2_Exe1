@@ -13,6 +13,9 @@
 using namespace std;
 using namespace ariel;
 
+enum Color {WHITE, GRAY, BLACK};
+
+
 vector<int> getAdjVertices(int v, Graph &graph)
 {
     vector<int> adjVertices;
@@ -25,6 +28,20 @@ vector<int> getAdjVertices(int v, Graph &graph)
         }
     }
     return adjVertices;
+}
+
+string constructPath(const vector<int>& parent, int start, int end)
+{
+    if (parent[end] == -1)
+        return "No path found";
+
+    string path = to_string(end);
+    while (end != start)
+    {
+        end = parent[end];
+        path = to_string(end) + " -> " + path;
+    }
+    return path;
 }
 
 bool Algorithms::isConnected(Graph graph)
@@ -68,18 +85,20 @@ bool Algorithms::isConnected(Graph graph)
 }
 
 // BFS function
-vector<int> BFS(Graph &graph, size_t start, size_t end, vector<int>& prev, size_t numVertices, vector<vector<int>>& adjacencyMatrix)
+string BFS(Graph &graph, int start, int end)
 {
-    // Initialize the visited array with false
+    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+    size_t numVertices = graph.getNumVertices();
+    vector<int> parentVertx(numVertices, -1);
     vector<bool> visited(numVertices, false);
-    // Initialize the queue for BFS
+    string shortestpath = "";
     queue<int> q;
     // Mark the start vertex as visited
-    visited[start] = true;
+    visited[(size_t)start] = true;
+    // Set the parentVertxious node of the start vertex as itself
+   // parentVertx[start] = start;
     // Add the start vertex to the queue
     q.push(start);
-    // Set the previous node of the start vertex as itself
-    prev[start] = start;
 
     // While the queue is not empty
     while (!q.empty())
@@ -92,45 +111,57 @@ vector<int> BFS(Graph &graph, size_t start, size_t end, vector<int>& prev, size_
         // If the current vertex is the end vertex, break the loop
         if (current == end)
         {
-            break;
+            shortestpath = to_string(end);
+            while (parentVertx[(size_t)end] != -1)
+            {
+                shortestpath = to_string(parentVertx[(size_t)end]) + " -> " + shortestpath;
+                end = parentVertx[(size_t)end];
+            }
+            return shortestpath;
         }
 
         // For each vertex in the graph
         for (size_t i = 0; i < numVertices; ++i)
         {
             // If the current vertex is connected to the i-th vertex and the i-th vertex is not visited
-            if (adjacencyMatrix[(size_t)current][i] != 0 && !visited[i])
+            if (adjMatrix[(size_t)current][i] != 0 && !visited[i])
             {
                 // Add the i-th vertex to the queue
                 q.push(i);
                 // Mark the i-th vertex as visited
                 visited[i] = true;
-                // Set the previous node of the i-th vertex as the current vertex
-                prev[i] = current;
+                // Set the parentVertxious node of the i-th vertex as the current vertex
+                parentVertx[i] = current;
             }
         }
     }
 
-    return prev;
+    return "No path found";
 }
 
 // Dijkstra function
-vector<int>  Dijkstra(Graph &graph, size_t start, size_t end, vector<int>& dist, vector<int>& prev, size_t numVertices, vector<vector<int>>& adjacencyMatrix)
+string Dijkstra(Graph &graph, int start, int end)
 {
-    // Initialize the visited array with false
+    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+    size_t numVertices = graph.getNumVertices();
+
+    // Initialize visited, distanceance, and parent arrays
     vector<bool> visited(numVertices, false);
+    vector<int> distance(numVertices, INT_MAX);
+    vector<int> parentVertx(numVertices, -1);
+
     // Initialize the priority queue for Dijkstra's algorithm
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
-    // Initialize the distance of the start vertex as 0
-    dist[start] = 0;
+    // Initialize the distanceance of the start vertex as 0
+    distance[(size_t)start] = 0;
     // Add the start vertex to the priority queue
     pq.push({0, start});
 
     // While the priority queue is not empty
     while (!pq.empty())
     {
-        // Get the vertex with the smallest distance
+        // Get the vertex with the smallest distanceance
         int u = pq.top().second;
         // Remove the vertex from the priority queue
         pq.pop();
@@ -146,32 +177,33 @@ vector<int>  Dijkstra(Graph &graph, size_t start, size_t end, vector<int>& dist,
         for (size_t v = 0; v < numVertices; ++v)
         {
             // If the u-th vertex is connected to the v-th vertex and the v-th vertex is not visited
-            if (adjacencyMatrix[(size_t)u][v] != 0 && !visited[v])
+            if (adjMatrix[(size_t)u][v] != 0 && !visited[v])
             {
-                // Calculate the new distance to the v-th vertex
-                int newDist = dist[(size_t)u] + adjacencyMatrix[(size_t)u][v];
-                // If the new distance is smaller than the current distance
-                if (newDist < dist[v])
+                // Calculate the new distanceance to the v-th vertex
+                int newdistance = distance[(size_t)u] + adjMatrix[(size_t)u][v];
+                // If the new distanceance is smaller than the current distanceance
+                if (newdistance < distance[v])
                 {
-                    // Update the distance to the v-th vertex
-                    dist[v] = newDist;
-                    // Set the previous node of the v-th vertex as the u-th vertex
-                    prev[v] = u;
+                    // Update the distanceance to the v-th vertex
+                    distance[v] = newdistance;
+                    // Set the parentVertxious node of the v-th vertex as the u-th vertex
+                    parentVertx[v] = u;
                     // Add the v-th vertex to the priority queue
-                    pq.push({dist[v], v});
+                    pq.push({distance[v], v});
                 }
             }
         }
     }
 
-    return prev;
+
+    return constructPath(parentVertx, start, end);
 }
 
 // Bellman Ford function
-pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t end, vector<int>& dist, vector<int>& prev, size_t numVertices, vector<vector<int>>& adjacencyMatrix)
+pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t end, vector<int>& distance, vector<int>& parentVertx, size_t numVertices, vector<vector<int>>& adjacencyMatrix)
 {
-    // Initialize the distance of the start vertex as 0
-    dist[start] = 0;
+    // Initialize the distanceance of the start vertex as 0
+    distance[start] = 0;
 
     // For each vertex in the graph
     for (int i = 0; i < numVertices; ++i)
@@ -181,13 +213,13 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t e
         {
             for (size_t v = 0; v < numVertices; ++v)
             {
-                // If the u-th vertex is connected to the v-th vertex and the new distance to the v-th vertex is smaller
-                if (adjacencyMatrix[u][v] != 0 && dist[u] != 0 && dist[u] + adjacencyMatrix[u][v] < dist[v])
+                // If the u-th vertex is connected to the v-th vertex and the new distanceance to the v-th vertex is smaller
+                if (adjacencyMatrix[u][v] != 0 && distance[u] != 0 && distance[u] + adjacencyMatrix[u][v] < distance[v])
                 {
-                    // Update the distance to the v-th vertex
-                    dist[v] = dist[u] + adjacencyMatrix[u][v];
-                    // Set the previous node of the v-th vertex as the u-th vertex
-                    prev[v] = u;
+                    // Update the distanceance to the v-th vertex
+                    distance[v] = distance[u] + adjacencyMatrix[u][v];
+                    // Set the parentVertxious node of the v-th vertex as the u-th vertex
+                    parentVertx[v] = u;
                 }
             }
         }
@@ -200,8 +232,8 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t e
     {
         for (size_t v = 0; v < numVertices; ++v)
         {
-            // If the u-th vertex is connected to the v-th vertex and the new distance to the v-th vertex is smaller
-            if (adjacencyMatrix[u][v] != 0 && dist[u] != 0 && dist[u] + adjacencyMatrix[u][v] < dist[v])
+            // If the u-th vertex is connected to the v-th vertex and the new distanceance to the v-th vertex is smaller
+            if (adjacencyMatrix[u][v] != 0 && distance[u] != 0 && distance[u] + adjacencyMatrix[u][v] < distance[v])
             {
                 // Mark the v-th vertex as reachable from a negative cycle
                 inNegativeCycle[v] = true;
@@ -211,7 +243,7 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t e
         }
     }
 
-    return make_pair(prev, inNegativeCycle);
+    return make_pair(parentVertx, inNegativeCycle);
 }
 
 
@@ -255,83 +287,26 @@ pair<int, int> Algorithms::DFSUtil(Graph &g, int v, vector<bool> &visited, vecto
 }
 
 
-string Algorithms::shortestPath(Graph &graph, int start, int end)
+string Algorithms::shortestPathv2(Graph &graph, int start, int end)
 {
-    // Get the weight type of the graph
-    int weightType = graph.getWeightsType();
-    // Get the number of vertices in the graph
-    size_t numVertices = graph.getNumVertices();
-    // Initialize the inNegativeCycle vector with false
-    vector<bool> inNegativeCycle(numVertices, false);
-    // Get the adjacency matrix of the graph
-    vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix();
-    // Initialize the distance array with maximum integer value
-    vector<int> dist(numVertices, 0);
-    // Initialize the previous node array with -1
-    vector<int> prev(numVertices, -1);
-    // Initialize the path vector
-    vector<int> path;
+  if (start == end) {
+    return "The start and end vertices are the same.";
+  }
+  if (start < 0 || end < 0 || start >= graph.getNumVertices() || end >= graph.getNumVertices()) {
+    return "Invalid start or end vertex.";
+  }
 
-    // If the graph is unweighted
-    if (weightType == 0)
-    {
-        prev = BFS(graph, (size_t)start, (size_t)end, prev, numVertices, adjacencyMatrix);
-    }
-    // If the graph has positive weights
-    else if (weightType == 1)
-    {
-        prev = Dijkstra(graph, (size_t)start, (size_t)end, dist, prev, numVertices, adjacencyMatrix);
-    }
-    // If the graph has negative weights
-    else if (weightType == -1)
-    {
-        pair<vector<int>, vector<bool>> result = BellmanFord(graph, (size_t)start, (size_t)end, dist, prev, numVertices, adjacencyMatrix);
-        prev = result.first;
-        inNegativeCycle = result.second;
-    }
+  if (graph.getWeightsType() == 0) {
+    return BFS(graph, start, end);
+  } 
 
-    // If the end vertex is reachable from a negative cycle, return "NO PATH FROM START TO END"
-    if (inNegativeCycle[(size_t)end])
-    {
-        return "PATH GOES THROUGH NEGATIVE CYCLE";
-    }
-    // Generate the shortest path
-    // loop is going back from the end vertex to the start vertex.
-    for (int v = end; v != start; v = prev[(size_t)v])
-    {
-        // Check if prev[v] is a valid index
-        if (prev[(size_t)v] < 0 || prev[(size_t)v] >= prev.size())
-        {
-            return "invalide index";
-        }
-        path.push_back(v);
-    }
-    // adding the start vertex to the end of the path 
-    // because the loop was adding in reverse.
-    path.push_back(start);
-    // Reverse the path to get the correct order
-    reverse(path.begin(), path.end());
-
-    // Generate the result string
-    string result = "";
-    // For each vertex in the path
-    for (size_t i = 0; i < path.size(); ++i)
-    {
-        // If the vertex is not the start vertex, add an arrow before it
-        if (i != 0)
-        {
-            result += "->";
-        }
-        // Add the vertex to the result string
-        result += to_string(path[i]);
-    }
-    // Return the result string
-    return result;
+  else if (graph.getWeightsType() == 1) {
+    return Dijkstra(graph, start, end);
+  }
 }
 
 
 
-enum Color {WHITE, GRAY, BLACK};
 
 bool DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d, vector<int>& f, int& time, Graph& graph) {
     color[(size_t)u] = GRAY;
@@ -400,6 +375,9 @@ bool Algorithms::isContainsCycle(Graph& graph) {
     }    
 }
 
+
+// this function creates a copy of the original adjMatrix and converts it to an undirected graph
+// it helps us in the isBipartite function.
 vector<vector<int>> convertToUndirected(Graph &graph) {
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix(); // Original adjacency matrix
     vector<vector<int>> newAdjMatrix = adjMatrix; // Copy of the adjacency matrix
@@ -423,20 +401,22 @@ vector<vector<int>> convertToUndirected(Graph &graph) {
     return newAdjMatrix;
 }
 
-string Algorithms::isBipartite(Graph &graph) {
-    size_t numVertices = graph.getNumVertices();
-    vector<int> colorArr(numVertices, -1);
+string Algorithms::isBipartite(Graph &graph) 
+{
     vector<vector<int>> groups(2);
     vector<vector<int>> adjMatrix;
 
     // Check if the graph is directed
     if (graph.getIsDirected()) {
-        // If the graph is directed, convert it to undirected
+        // If the graph is directed, get a convert adjMatrix vertion of the graph to undirected.
         adjMatrix = convertToUndirected(graph);
     } else {
         // If the graph is undirected, use its adjacency matrix as is
         adjMatrix = graph.getAdjacencyMatrix();
     }
+
+    size_t numVertices = graph.getNumVertices();
+    vector<int> colorArr(numVertices, -1);
 
     for (size_t i = 0; i < numVertices; i++) {
         if (colorArr[i] == -1) {

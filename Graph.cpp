@@ -49,7 +49,7 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
             }
         }
     }
-    this->isWeighted = whatWeightType(matrix);
+    this->weightType = whatWeightType(matrix);
 }
 
 void Graph::printGraph()
@@ -91,7 +91,7 @@ void Graph::setIsDirected(bool type)
 
 void Graph::setWeightsType(int type)
 {
-    this->isWeighted = type;
+    this->weightType = type;
 }
 
 size_t Graph::getNumVertices()
@@ -111,5 +111,5 @@ bool Graph::getIsDirected()
 
 int Graph::getWeightsType()
 {
-    return this->isWeighted;
+    return this->weightType;
 }
