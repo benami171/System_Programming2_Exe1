@@ -190,53 +190,6 @@ string Dijkstra(Graph &graph, int start, int end)
     return constructPath(parentVertx, start, end);
 }
 
-// Bellman Ford function
-pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t end, vector<int>& d, vector<int>& parentVertx, size_t numVertices, vector<vector<int>>& adjacencyMatrix)
-{
-    // Initialize the d of the start vertex as 0
-    d[start] = 0;
-
-    // For each vertex in the graph
-    for (int i = 0; i < numVertices; ++i)
-    {
-        // For each edge in the graph
-        for (size_t u = 0; u < numVertices; ++u)
-        {
-            for (size_t v = 0; v < numVertices; ++v)
-            {
-                // If the u-th vertex is connected to the v-th vertex and the new distanceance to the v-th vertex is smaller
-                if (adjacencyMatrix[u][v] != 0 && d[u] != 0 && d[u] + adjacencyMatrix[u][v] < d[v])
-                {
-                    // Update the distanceance to the v-th vertex
-                    d[v] = d[u] + adjacencyMatrix[u][v];
-                    // Set the parentVertxious node of the v-th vertex as the u-th vertex
-                    parentVertx[v] = u;
-                }
-            }
-        }
-    }
-
-    // Initialize the array to mark vertices reachable from a negative cycle
-    vector<bool> inNegativeCycle(numVertices, false);
-    // For each edge in the graph
-    for (size_t u = 0; u < numVertices; ++u)
-    {
-        for (size_t v = 0; v < numVertices; ++v)
-        {
-            // If the u-th vertex is connected to the v-th vertex and the new distanceance to the v-th vertex is smaller
-            if (adjacencyMatrix[u][v] != 0 && d[u] != 0 && d[u] + adjacencyMatrix[u][v] < d[v])
-            {
-                // Mark the v-th vertex as reachable from a negative cycle
-                inNegativeCycle[v] = true;
-                // Update the containsNegativeCycle field of the graph
-                graph.setContainsNegativeCycle(true);
-            }
-        }
-    }
-
-    return make_pair(parentVertx, inNegativeCycle);
-}
-
 string bellmanfordv2(Graph& graph, int start, int end){
     size_t numVertices = graph.getNumVertices();
     vector<int> d(numVertices, INT_MAX);
@@ -258,6 +211,23 @@ string bellmanfordv2(Graph& graph, int start, int end){
             }
         }
     }
+    vector<bool> inNegativeCycle(numVertices, false);
+    for (size_t u = 0; u < numVertices; ++u)
+    {
+        for (size_t v = 0; v < numVertices; ++v)
+        {
+            if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v])
+            {
+                graph.setContainsNegativeCycle(true);
+                return "Negative cycle detected";
+            }
+        }
+    }
+
+    // if (inNegativeCycle[(size_t)end])
+    // {
+    //     return "Negative cycle detected";
+    // }
 
     return constructPath(parentVertx, start, end);
 }
