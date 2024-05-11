@@ -4,102 +4,39 @@
 #include <stdexcept>
 #include "Graph.hpp"
 #include <climits>
-#define NO_EDGE 0
-
 
 using namespace std;
 using namespace ariel;
 
-void ariel::Graph::loadGraph(vector<vector<int>> &matrix)
+void Graph::loadGraph(vector<vector<int>> &matrix)
 {
-    if (!matrix.empty())
+    this->numVertices = matrix.size();
+    size_t matSize = matrix.size();
+    this->adjacencyMatrix = matrix;
+
+    for(size_t i = 0; i < matSize; i++)
     {
-        // Check if the matrix is square
-        for (const auto &row : matrix)
+        if (matrix[i].size() != matSize)
         {
-            if (row.size() != matrix.size())
-            {
-                throw invalid_argument("The graph is not a square matrix.");
-            }
+            throw invalid_argument("Input matrix is not a square matrix");
         }
+        for (int j = 0; j < matSize; j++)
+        {
+            if (i == j && matrix[i][j] != 0)
+            {
+                throw invalid_argument("In adjacency matrix, the diagonal elements should be zeros");
+            }
 
-        // If the graph is undirected, check if the matrix is symmetric
-        if (!getIsDirected())
-        {
-            for (size_t i = 0; i < matrix.size(); ++i)
+            if( matrix[i][j] != matrix[j][i] && !this->isDirected)
             {
-                for (size_t j = 0; j < i; ++j)
-                {
-                    if (matrix[i][j] != matrix[j][i])
-                    {
-                        throw invalid_argument("Undirected graph can only load a symmetric matrix.");
-                    }
-                }
-            }
-        }
-
-        // Load the adjacency matrix
-        adjacencyMatrix.clear();
-        adjacencyMatrix.resize(matrix.size(), vector<int>(matrix.size(), NO_EDGE));
-        bool hasNegativeWeights = false;
-        bool hasPositiveWeights = false;
-        for (size_t i = 0; i < matrix.size(); ++i)
-        {
-            for (size_t j = 0; j < matrix[i].size(); ++j)
-            {
-                if (matrix[i][j] != NO_EDGE)
-                {
-                    adjacencyMatrix[i][j] = matrix[i][j];
-                    if (matrix[i][j] < 0)
-                    {
-                        hasNegativeWeights = true;
-                    }
-                    else if (matrix[i][j] > 0)
-                    {
-                        hasPositiveWeights = true;
-                    }
-                }
-            }
-        }
-        numVertices = matrix.size();
-
-        // Determine the type of weights and call setWeightsType accordingly
-        if (hasNegativeWeights)
-        {
-            setWeightsType(-1);
-        }
-        else
-        {
-            // Check if the graph is unweighted
-            bool isUnweighted = true;
-            for (size_t i = 0; i < matrix.size(); ++i)
-            {
-                for (size_t j = 0; j < matrix[i].size(); ++j)
-                {
-                    if (matrix[i][j] != NO_EDGE && matrix[i][j] != 0 && matrix[i][j] != 1)
-                    {
-                        isUnweighted = false;
-                        break;
-                    }
-                }
-                if (!isUnweighted)
-                {
-                    break;
-                }
-            }
-            if (isUnweighted)
-            {
-                setWeightsType(0);
-            }
-            else
-            {
-                setWeightsType(1);
+                throw invalid_argument("Undirected graph should have symmetric adjacency matrix");
             }
         }
     }
+    this->isWeighted = whatWeightType(matrix);
 }
 
-void ariel::Graph::printGraph()
+void Graph::printGraph()
 {
     bool type = getIsDirected();
     int edges = 0;
@@ -107,7 +44,7 @@ void ariel::Graph::printGraph()
     {
         for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j)
         {
-            if (i != j && adjacencyMatrix[i][j] != NO_EDGE)
+            if (i != j && adjacencyMatrix[i][j] != 0)
             {
                 ++edges;
             }
@@ -116,50 +53,72 @@ void ariel::Graph::printGraph()
     if (isDirected == false)
     { // if the graph is undirected
         edges /= 2;
-            cout << "Undirected graph with " << numVertices << " vertices and " << edges << " edges." << endl;
-
-    } else {
+        cout << "Undirected graph with " << numVertices << " vertices and " << edges << " edges." << endl;
+    }
+    else
+    {
         cout << "Directed graph with " << numVertices << " vertices and " << edges << " edges." << endl;
     }
 }
 
-void ariel::Graph::setContainsNegativeCycle(bool flag)
+int whatWeightType(vector<vector<int>> &matrix)
+{
+    int type = 0;
+    int matSize = matrix.size();
+    for (int i = 0; i < matSize; i++)
+    {
+        for (int j = 0; j < matSize; j++)
+        {
+            if (matrix[i][j] < 0)
+            {
+                return -1;
+            }
+            else if (matrix[i][j] > 0)
+            {
+                type = 1;
+            }
+        }
+    }
+    return type;
+}
+
+void Graph::setContainsNegativeCycle(bool flag)
 {
     this->containsNegativeCycle = flag;
 }
 
-bool ariel::Graph::getContainsNegativeCycle()
+bool Graph::getContainsNegativeCycle()
 {
     return this->containsNegativeCycle;
 }
 // check if the graph is directed or undirected
 // by comparing the adjacency matrix with its transpose
-void ariel::Graph::setIsDirected(bool type)
+void Graph::setIsDirected(bool type)
 {
     this->isDirected = type;
 }
 
-void ariel::Graph::setWeightsType(int type)
+void Graph::setWeightsType(int type)
 {
     this->isWeighted = type;
 }
 
-size_t ariel::Graph::getNumVertices()
+size_t Graph::getNumVertices()
 {
     return numVertices;
 }
 
-vector<vector<int>> ariel::Graph::getAdjacencyMatrix()
+vector<vector<int>> Graph::getAdjacencyMatrix()
 {
     return adjacencyMatrix;
 }
 
-bool ariel::Graph::getIsDirected()
+bool Graph::getIsDirected()
 {
     return this->isDirected;
 }
 
-int ariel::Graph::getWeightsType()
+int Graph::getWeightsType()
 {
     return this->isWeighted;
 }
