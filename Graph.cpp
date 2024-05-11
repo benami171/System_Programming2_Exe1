@@ -8,66 +8,13 @@
 using namespace std;
 using namespace ariel;
 
-void Graph::loadGraph(vector<vector<int>> &matrix)
-{
-    this->numVertices = matrix.size();
-    size_t matSize = matrix.size();
-    this->adjacencyMatrix = matrix;
-
-    for(size_t i = 0; i < matSize; i++)
-    {
-        if (matrix[i].size() != matSize)
-        {
-            throw invalid_argument("Input matrix is not a square matrix");
-        }
-        for (int j = 0; j < matSize; j++)
-        {
-            if (i == j && matrix[i][j] != 0)
-            {
-                throw invalid_argument("In adjacency matrix, the diagonal elements should be zeros");
-            }
-
-            if( matrix[i][j] != matrix[j][i] && !this->isDirected)
-            {
-                throw invalid_argument("Undirected graph should have symmetric adjacency matrix");
-            }
-        }
-    }
-    this->isWeighted = whatWeightType(matrix);
-}
-
-void Graph::printGraph()
-{
-    bool type = getIsDirected();
-    int edges = 0;
-    for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
-    {
-        for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j)
-        {
-            if (i != j && adjacencyMatrix[i][j] != 0)
-            {
-                ++edges;
-            }
-        }
-    }
-    if (isDirected == false)
-    { // if the graph is undirected
-        edges /= 2;
-        cout << "Undirected graph with " << numVertices << " vertices and " << edges << " edges." << endl;
-    }
-    else
-    {
-        cout << "Directed graph with " << numVertices << " vertices and " << edges << " edges." << endl;
-    }
-}
-
 int whatWeightType(vector<vector<int>> &matrix)
 {
     int type = 0;
-    int matSize = matrix.size();
-    for (int i = 0; i < matSize; i++)
+    size_t matSize = matrix.size();
+    for (size_t i = 0; i < matSize; i++)
     {
-        for (int j = 0; j < matSize; j++)
+        for (size_t j = 0; j < matSize; j++)
         {
             if (matrix[i][j] < 0)
             {
@@ -81,6 +28,50 @@ int whatWeightType(vector<vector<int>> &matrix)
     }
     return type;
 }
+
+void Graph::loadGraph(vector<vector<int>> &matrix)
+{
+    this->numVertices = matrix.size();
+    this->adjacencyMatrix = matrix;
+    size_t matSize = matrix.size();
+
+    for(size_t i = 0; i < matSize; i++){
+        if (matrix[i].size() != matSize){
+            throw invalid_argument("Input matrix is not a square matrix");
+        }
+        for (size_t j = 0; j < matSize; j++){
+            if (i == j && matrix[i][j] != 0){
+                throw invalid_argument("In adjacency matrix, the diagonal elements should be zeros");
+            }
+
+            if( matrix[i][j] != matrix[j][i] && !this->isDirected){
+                throw invalid_argument("Undirected graph should have symmetric adjacency matrix");
+            }
+        }
+    }
+    this->isWeighted = whatWeightType(matrix);
+}
+
+void Graph::printGraph()
+{
+    bool type = getIsDirected();
+    int edges = 0;
+    for (size_t i = 0; i < adjacencyMatrix.size(); ++i){
+        for (size_t j = 0; j < adjacencyMatrix[i].size(); ++j){
+            if (i != j && adjacencyMatrix[i][j] != 0){
+                ++edges;
+            }
+        }
+    }
+    if (!this->isDirected){ 
+        edges /= 2;
+        cout << "Undirected graph with " << numVertices << " vertices and " << edges << " edges." << endl;
+    }
+    else{
+        cout << "Directed graph with " << numVertices << " vertices and " << edges << " edges." << endl;
+    }
+}
+
 
 void Graph::setContainsNegativeCycle(bool flag)
 {

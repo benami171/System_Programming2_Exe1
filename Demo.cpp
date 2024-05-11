@@ -10,7 +10,6 @@ using ariel::Algorithms;
 #include <stdexcept>
 #include <vector>
 #include <climits>
-#define NO_EDGE 0
 
 using namespace std;
 
@@ -18,9 +17,9 @@ int main()
 {
     ariel::Graph g1;
     vector<vector<int>> graph1 = {
-        {NO_EDGE, 1, NO_EDGE},
-        {1, NO_EDGE, NO_EDGE},
-        {NO_EDGE, NO_EDGE, NO_EDGE}};
+        {0, 1, 0},
+        {1, 0, 0},
+        {0, 0, 0}};
     
 
     cout << "GRAPH 1:" << endl;
@@ -36,9 +35,9 @@ int main()
 
     g1.setIsDirected(true);
     vector<vector<int>> graph2 = {
-        {NO_EDGE,       1, NO_EDGE},
-        {      1, NO_EDGE,       1},
-        {NO_EDGE,       1, NO_EDGE}};
+        {0,       1, 0},
+        {      1, 0,       1},
+        {0,       1, 0}};
 
     cout << "GRAPH 2:" << endl;
     g1.loadGraph(graph2);
@@ -50,9 +49,9 @@ int main()
     cout << Algorithms::isContainsCycle(g1) << endl;    // should return 1
 
     vector<vector<int>> graph3 = {
-        {NO_EDGE, 1, 1},
-        {1, NO_EDGE, 1},
-        {1, 1, NO_EDGE}};
+        {0, 1, 1},
+        {1, 0, 1},
+        {1, 1, 0}};
 
     cout << "GRAPH 3:" << endl;
     g1.loadGraph(graph3);
@@ -65,10 +64,10 @@ int main()
 
     g1.setIsDirected(false);
     vector<vector<int>> graph4 = {
-        {NO_EDGE,      1,     -1,      5},
-        {      1,NO_EDGE,      3,      5},
-        {     -1,      3,NO_EDGE,     -5},
-        {      5,      5,     -5,NO_EDGE}};
+        {0,      1,     -1,      5},
+        {      1,0,      3,      5},
+        {     -1,      3,0,     -5},
+        {      5,      5,     -5,0}};
     cout << "GRAPH 4:" << endl;
     g1.loadGraph(graph4);
     g1.printGraph();                                    // Undirected graph with 4 vert and 6 edg 

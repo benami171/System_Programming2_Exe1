@@ -1,7 +1,7 @@
 #!make -f
 
 CXX=clang++
-CXXFLAGS=-std=c++11 -Werror -g
+CXXFLAGS=-std=c++11 -Werror -g -Wsign-conversion
 VALGRIND_FLAGS=-v --leak-check=full --show-leak-kinds=all  --error-exitcode=99
 
 COMMON_SOURCES=Graph.cpp Algorithms.cpp 
