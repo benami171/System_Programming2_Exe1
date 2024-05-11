@@ -39,7 +39,7 @@ string constructPath(const vector<int>& parent, int start, int end)
     while (end != start)
     {
         end = parent[(size_t)end];
-        path = to_string(end) + " -> " + path;
+        path = to_string(end) + "->" + path;
     }
     return path;
 }
@@ -218,7 +218,7 @@ string bellmanfordv2(Graph& graph, int start, int end){
         {
             if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v])
             {
-                graph.setContainsNegativeCycle(true);
+                // graph.setContainsNegativeCycle(true);
                 return "Negative cycle detected";
             }
         }
@@ -451,19 +451,20 @@ string Algorithms::isBipartite(Graph &graph)
     return result;
 }
 
-string Algorithms::isNegativeCycle(Graph graph){
-    if (graph.getContainsNegativeCycle())
-    {
-        return "The graph contains a negative cycle";
-    }
+string Algorithms::isNegativeCycle(Graph& graph){
+    
     if (graph.getWeightsType() != -1)
     {
-        return "The graph does not contain a negative cycle";
+        return "Graph does not contain a negative cycle";
+    }
+    if (graph.getContainsNegativeCycle())
+    {
+        return "Negative cycle detected";
     }
     string helper = Algorithms::shortestPath(graph, 0, 0);
     if(graph.getContainsNegativeCycle()){
-        return "The graph contains a negative cycle";
+        return "Negative cycle detected";
     } else {
-        return "The graph does not contain a negative cycle";
+        return "Graph does not contain a negative cycle";
     }
 }
