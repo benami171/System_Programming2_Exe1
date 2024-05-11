@@ -32,13 +32,13 @@ vector<int> getAdjVertices(int v, Graph &graph)
 
 string constructPath(const vector<int>& parent, int start, int end)
 {
-    if (parent[end] == -1)
+    if (parent[(size_t)end] == -1)
         return "No path found";
 
     string path = to_string(end);
     while (end != start)
     {
-        end = parent[end];
+        end = parent[(size_t)end];
         path = to_string(end) + " -> " + path;
     }
     return path;
@@ -273,7 +273,7 @@ pair<int, int> Algorithms::DFSUtil(Graph &g, int v, vector<bool> &visited, vecto
 }
 
 
-string Algorithms::shortestPathv2(Graph &graph, int start, int end)
+string Algorithms::shortestPath(Graph &graph, int start, int end)
 {
   if (start == end) {
     return "The start and end vertices are the same.";
@@ -290,9 +290,8 @@ string Algorithms::shortestPathv2(Graph &graph, int start, int end)
     return Dijkstra(graph, start, end);
   } 
 
-  else if (graph.getWeightsType() == -1) {
-    return bellmanfordv2(graph, start, end);
-  } 
+   return bellmanfordv2(graph, start, end);
+  
 }
 
 
