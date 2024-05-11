@@ -110,15 +110,7 @@ string BFS(Graph &graph, int start, int end)
 
         // If the current vertex is the end vertex, break the loop
         if (current == end)
-        {
-            shortestpath = to_string(end);
-            while (parentVertx[(size_t)end] != -1)
-            {
-                shortestpath = to_string(parentVertx[(size_t)end]) + " -> " + shortestpath;
-                end = parentVertx[(size_t)end];
-            }
-            return shortestpath;
-        }
+            break;
 
         // For each vertex in the graph
         for (size_t i = 0; i < numVertices; ++i)
@@ -136,7 +128,7 @@ string BFS(Graph &graph, int start, int end)
         }
     }
 
-    return "No path found";
+    return constructPath(parentVertx, start, end);
 }
 
 // Dijkstra function
@@ -147,14 +139,14 @@ string Dijkstra(Graph &graph, int start, int end)
 
     // Initialize visited, distanceance, and parent arrays
     vector<bool> visited(numVertices, false);
-    vector<int> distance(numVertices, INT_MAX);
+    vector<int> d(numVertices, INT_MAX);
     vector<int> parentVertx(numVertices, -1);
 
     // Initialize the priority queue for Dijkstra's algorithm
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
     // Initialize the distanceance of the start vertex as 0
-    distance[(size_t)start] = 0;
+    d[(size_t)start] = 0;
     // Add the start vertex to the priority queue
     pq.push({0, start});
 
@@ -179,31 +171,30 @@ string Dijkstra(Graph &graph, int start, int end)
             // If the u-th vertex is connected to the v-th vertex and the v-th vertex is not visited
             if (adjMatrix[(size_t)u][v] != 0 && !visited[v])
             {
-                // Calculate the new distanceance to the v-th vertex
-                int newdistance = distance[(size_t)u] + adjMatrix[(size_t)u][v];
-                // If the new distanceance is smaller than the current distanceance
-                if (newdistance < distance[v])
+                // Calculate the new distance to the v-th vertex
+                int newdistance = d[(size_t)u] + adjMatrix[(size_t)u][v];
+                // If the new distance is smaller than the current distanceance
+                if (newdistance < d[v])
                 {
-                    // Update the distanceance to the v-th vertex
-                    distance[v] = newdistance;
+                    // Update the distance to the v-th vertex
+                    d[v] = newdistance;
                     // Set the parentVertxious node of the v-th vertex as the u-th vertex
                     parentVertx[v] = u;
                     // Add the v-th vertex to the priority queue
-                    pq.push({distance[v], v});
+                    pq.push({d[v], v});
                 }
             }
         }
     }
-
-
+    // at this stage, parentVertx contains the shortest path from start to end
     return constructPath(parentVertx, start, end);
 }
 
 // Bellman Ford function
-pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t end, vector<int>& distance, vector<int>& parentVertx, size_t numVertices, vector<vector<int>>& adjacencyMatrix)
+pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t end, vector<int>& d, vector<int>& parentVertx, size_t numVertices, vector<vector<int>>& adjacencyMatrix)
 {
-    // Initialize the distanceance of the start vertex as 0
-    distance[start] = 0;
+    // Initialize the d of the start vertex as 0
+    d[start] = 0;
 
     // For each vertex in the graph
     for (int i = 0; i < numVertices; ++i)
@@ -214,10 +205,10 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t e
             for (size_t v = 0; v < numVertices; ++v)
             {
                 // If the u-th vertex is connected to the v-th vertex and the new distanceance to the v-th vertex is smaller
-                if (adjacencyMatrix[u][v] != 0 && distance[u] != 0 && distance[u] + adjacencyMatrix[u][v] < distance[v])
+                if (adjacencyMatrix[u][v] != 0 && d[u] != 0 && d[u] + adjacencyMatrix[u][v] < d[v])
                 {
                     // Update the distanceance to the v-th vertex
-                    distance[v] = distance[u] + adjacencyMatrix[u][v];
+                    d[v] = d[u] + adjacencyMatrix[u][v];
                     // Set the parentVertxious node of the v-th vertex as the u-th vertex
                     parentVertx[v] = u;
                 }
@@ -233,7 +224,7 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t e
         for (size_t v = 0; v < numVertices; ++v)
         {
             // If the u-th vertex is connected to the v-th vertex and the new distanceance to the v-th vertex is smaller
-            if (adjacencyMatrix[u][v] != 0 && distance[u] != 0 && distance[u] + adjacencyMatrix[u][v] < distance[v])
+            if (adjacencyMatrix[u][v] != 0 && d[u] != 0 && d[u] + adjacencyMatrix[u][v] < d[v])
             {
                 // Mark the v-th vertex as reachable from a negative cycle
                 inNegativeCycle[v] = true;
@@ -244,6 +235,31 @@ pair<vector<int>, vector<bool>> BellmanFord(Graph &graph, size_t start, size_t e
     }
 
     return make_pair(parentVertx, inNegativeCycle);
+}
+
+string bellmanfordv2(Graph& graph, int start, int end){
+    size_t numVertices = graph.getNumVertices();
+    vector<int> d(numVertices, INT_MAX);
+    vector<int> parentVertx(numVertices, -1);
+    vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
+
+    d[(size_t)start] = 0;
+    for (size_t i = 0; i < numVertices - 1; ++i)
+    {
+        for (size_t u = 0; u < numVertices; ++u)
+        {
+            for (size_t v = 0; v < numVertices; ++v)
+            {
+                if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v])
+                {
+                    d[v] = d[u] + adjMatrix[u][v];
+                    parentVertx[v] = u;
+                }
+            }
+        }
+    }
+
+    return constructPath(parentVertx, start, end);
 }
 
 
@@ -302,7 +318,11 @@ string Algorithms::shortestPathv2(Graph &graph, int start, int end)
 
   else if (graph.getWeightsType() == 1) {
     return Dijkstra(graph, start, end);
-  }
+  } 
+
+  else if (graph.getWeightsType() == -1) {
+    return bellmanfordv2(graph, start, end);
+  } 
 }
 
 
