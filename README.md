@@ -6,11 +6,11 @@
 ## Algorithms Implemented
 
 - `isConnected(Graph graph)`: Checks if theres a vertex that can reach all other vertices.
-- `shortestPath(Graph& graph, int start, int end)`: Finds the shortest path between two vertices in the graph using BFS, Dijkstra or Bellman-Ford algorithm.
-- `isContainsCycle(Graph& graph)`: Checks if the graph contains a cycle using DFS.
+- `shortestPath(Graph& graph, int start, int end)`: Finds the shortest path between two vertices using BFS, Dijkstra or Bellman-Ford algorithm, will return the path or No path found.
+- `isContainsCycle(Graph& graph)`: Checks if the graph contains a cycle using DFS, returns any cycle there is, "0" if there isnt.
 - `findCycle(Graph& graph)`: A helper function to find a cycle in the graph.
-- `isBipartite(Graph& graph)`: Checks if the graph is bipartite.
-- `negativeCycle(Graph& graph)`: Checks if the graph contains a negative cycle using Bellman-Ford algorithm.
+- `isBipartite(Graph& graph)`: Checks if the graph is bipartite, if so, it will return the two sets.
+- `negativeCycle(Graph& graph)`: Checks if the graph contains a negative cycle and returns "Negative cycle detected" if there is one, and "Graph does not contain a negative cycle" otherwise.
 
 ## How to Run
 
