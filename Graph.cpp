@@ -31,6 +31,10 @@ int whatWeightType(vector<vector<int>> &matrix)
 
 void Graph::loadGraph(vector<vector<int>> &matrix)
 {
+    if (matrix.empty() || matrix[0].size()<2)
+    {
+        throw invalid_argument("Input matrix is empty");
+    }
     this->numVertices = matrix.size();
     this->adjacencyMatrix = matrix;
     size_t matSize = matrix.size();

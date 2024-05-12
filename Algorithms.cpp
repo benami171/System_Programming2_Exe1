@@ -50,7 +50,6 @@ string cycleConstructor(vector<int>& cyclePath, int startingVertex) {
         if (cyclePath[i] == startingVertex) {
             break;
         }
-        // cycle = to_string(cyclePath[(size_t)i]) + "->" + cycle;
     }
     for (size_t j = i; j < cyclePath.size(); j++) {
         cycle = cycle + to_string(cyclePath[j]) + "->";
@@ -222,14 +221,10 @@ string bellmanfordv2(Graph& graph, int start, int end){
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
 
     d[(size_t)start] = 0;
-    for (size_t i = 0; i < numVertices - 1; ++i)
-    {
-        for (size_t u = 0; u < numVertices; ++u)
-        {
-            for (size_t v = 0; v < numVertices; ++v)
-            {
-                if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v])
-                {
+    for (size_t i = 0; i < numVertices - 1; ++i){
+        for (size_t u = 0; u < numVertices; ++u){
+            for (size_t v = 0; v < numVertices; ++v){
+                if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v]){
                     d[v] = d[u] + adjMatrix[u][v];
                     parentVertx[v] = u;
                 }
@@ -237,64 +232,14 @@ string bellmanfordv2(Graph& graph, int start, int end){
         }
     }
     vector<bool> inNegativeCycle(numVertices, false);
-    for (size_t u = 0; u < numVertices; ++u)
-    {
-        for (size_t v = 0; v < numVertices; ++v)
-        {
-            if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v])
-            {
-                // graph.setContainsNegativeCycle(true);
+    for (size_t u = 0; u < numVertices; ++u){
+        for (size_t v = 0; v < numVertices; ++v){
+            if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v]){
                 return "Negative cycle detected";
             }
         }
     }
-
-    // if (inNegativeCycle[(size_t)end])
-    // {
-    //     return "Negative cycle detected";
-    // }
-
     return constructPath(parentVertx, start, end);
-}
-
-
-pair<pair<stack<int>, vector<int>>, pair<int, int>> Algorithms::DFS(Graph &g, stack<int> &orderOfVertices) {
-    size_t numVertices = g.getAdjacencyMatrix().size();
-    vector<bool> visited(numVertices, false);
-    vector<int> parent(numVertices, -1);
-
-    while (!orderOfVertices.empty()) {
-        int v = orderOfVertices.top();
-        orderOfVertices.pop();
-        if (!visited[(size_t)v]) {
-            pair<int, int> cycle = DFSUtil(g, v, visited, parent);
-            if (cycle.first != -1) {
-                // A cycle was found
-                return make_pair(make_pair(orderOfVertices, parent), cycle);
-            }
-        }
-    }
-
-    // No cycle was found
-    return make_pair(make_pair(orderOfVertices, parent), make_pair(-1, -1));
-}
-
-pair<int, int> Algorithms::DFSUtil(Graph &g, int v, vector<bool> &visited, vector<int> &parent) {
-    visited[(size_t)v] = true;
-    vector<int> adjVertices = getAdjVertices(v, g);
-
-    for (int u : adjVertices) {
-        if (!visited[(size_t)u]) {
-            parent[(size_t)u] = v;
-            return DFSUtil(g, u, visited, parent);
-        } else if (parent[(size_t)v] != u) {
-            // A back edge was found, indicating a cycle
-            return make_pair(u, v);
-        }
-    }
-
-    // No cycle was found from this vertex
-    return make_pair(-1, -1);
 }
 
 
@@ -318,7 +263,6 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
 }
 
 
-//////// DFS RETURNING CYCLE STRING /////////
 string containsCycleUtil(Graph& graph, size_t u, vector<Color>* color, vector<int>* parent, vector<int>* cyclePath) {
     // Marking the vertex as visited and
     // adding the starting vertex to the path.
