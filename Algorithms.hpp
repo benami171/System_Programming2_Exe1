@@ -1,3 +1,5 @@
+// NAME: GAL BEN AMI
+
 #ifndef ALGORITHMS_HPP
 #define ALGORITHMS_HPP
 
@@ -14,15 +16,12 @@ namespace ariel{
 class Algorithms
 {
     public:
-        static bool isConnected(Graph graph);
-        static string shortestPath(Graph& graph, int start, int end);
-        static string isContainsCycle(Graph& graph);
-        static string isBipartite(Graph& graph);
-        static string negativeCycle(Graph& graph);
-        static string findCycle(Graph& graph);
-        static pair<pair<stack<int>,vector<int>>,pair<int,int>> DFS(Graph &g,stack<int> &orderOfVertices);
-        static pair<int, int> DFSUtil(Graph &g, int v, vector<bool> &visited, vector<int> &parent);
-
+        static bool isConnected(Graph graph); // if can reach all vertices from any vertex
+        static string shortestPath(Graph& graph, int start, int end); // using BFS, Dijkstra or Bellman-Ford.
+        static string isContainsCycle(Graph& graph); // using DFS implementation.
+        static string findCycle(Graph& graph); // a helper function
+        static string isBipartite(Graph& graph); 
+        static string negativeCycle(Graph& graph); // using Bellman-Ford.
 };
 
 }
