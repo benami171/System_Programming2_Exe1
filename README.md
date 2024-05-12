@@ -1,10 +1,11 @@
 # Graph Algorithms Project
 
-This project implements various graph algorithms in C++. The algorithms are implemented in the `Algorithms` class and are used to perform operations on instances of the `Graph` class.
+- This project implements various graph algorithms in C++. The algorithms are implemented in the `Algorithms` class and are used to perform operations on instances of the `Graph` class.
+- The graph is undirected by default in the constructor, if we want to state that the graph is directed we will type 'Graph g(true);'
 
 ## Algorithms Implemented
 
-- `isConnected(Graph graph)`: Checks if all vertices in the graph are connected.
+- `isConnected(Graph graph)`: Checks if theres a vertex that can reach all other vertices.
 - `shortestPath(Graph& graph, int start, int end)`: Finds the shortest path between two vertices in the graph using BFS, Dijkstra or Bellman-Ford algorithm.
 - `isContainsCycle(Graph& graph)`: Checks if the graph contains a cycle using DFS.
 - `findCycle(Graph& graph)`: A helper function to find a cycle in the graph.
@@ -24,8 +25,5 @@ The project includes a Makefile for easy compilation and running of the code. He
 
 ## Testing
 
-The project includes a test file that contains a lot of tests to check the project's functionality.
-
-## Note
-
-This project uses the clang++ compiler with the C++11 standard. It also uses the clang-tidy tool for code quality checks and valgrind for memory leak detection.
+The project includes a test file that contains a lot of tests to check the algorithms on directed/undirected graphs
+with negative weights/no weights/positive weights.
