@@ -1,7 +1,4 @@
-# Graph Algorithms
-
-This project implements various graph algorithms in C++. It includes a Graph class and an Algorithms class that contains methods for performing operations on the graph.
-
+#תכנות מערכות 2 - מטלה 1
 ## Getting Started
 
 ### Prerequisites
