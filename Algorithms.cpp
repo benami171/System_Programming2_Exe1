@@ -374,10 +374,10 @@ string DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d
     time++;
     f[(size_t)u] = time;
 
-    return "No cycle detected";  // no cycle detected
+    return "";  // no cycle detected
 }
 
-string DFS(Graph& graph) {
+string Algorithms::DFS(Graph& graph) {
     size_t numVertices = graph.getNumVertices();
     vector<Color> color(numVertices, WHITE);
     vector<int> parent(numVertices, -1);
@@ -390,7 +390,7 @@ string DFS(Graph& graph) {
         if (color[u] == WHITE) {
             string cycle = DFSVisit(u, color, parent, d, f, time, graph);
             if (!cycle.empty()) {
-                return cycle;  // cycle detected
+                return "Graph contains a cycle: " + cycle;  // cycle detected
             }
         }
     }
@@ -398,21 +398,11 @@ string DFS(Graph& graph) {
     return "No cycle detected";  // no cycle detected
 }
 
-string directedIsContainsCycle(Graph& graph) {
-    return DFS(graph);
-}
 
-string undirectedIsContainsCycle(Graph& graph) {
-    return DFS(graph);
-}
 
 string Algorithms::isContainsCycle(Graph& graph) {
     if(graph.getNumVertices() < 2) return "No cycle detected";
-    if(graph.getIsDirected() == true){
-        return directedIsContainsCycle(graph);
-    } else {
-        return undirectedIsContainsCycle(graph);
-    }    
+    return DFS(graph);
 }
 
 

@@ -19,6 +19,7 @@ class Algorithms
         static string isContainsCycle(Graph& graph);
         static string isBipartite(Graph& graph);
         static string isNegativeCycle(Graph& graph);
+        static string DFS(Graph& graph);
         static pair<pair<stack<int>,vector<int>>,pair<int,int>> DFS(Graph &g,stack<int> &orderOfVertices);
         static pair<int, int> DFSUtil(Graph &g, int v, vector<bool> &visited, vector<int> &parent);
 
