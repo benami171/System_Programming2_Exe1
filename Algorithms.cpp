@@ -44,6 +44,7 @@ string constructPath(const vector<int>& parent, int start, int end)
     return path;
 }
 
+
 bool Algorithms::isConnected(Graph graph)
 {
     size_t numVertices = graph.getNumVertices();
@@ -55,26 +56,35 @@ bool Algorithms::isConnected(Graph graph)
         return true; // An empty graph is considered connected
     }
 
-    q.push(0);
-    visited[0] = true;
-
     vector<vector<int>> adjacencyMatrix = graph.getAdjacencyMatrix(); // Fetch the adjacency matrix once
 
-    while (!q.empty())
+    // For each vertex in the graph
+    for (size_t startVertex = 0; startVertex < numVertices; ++startVertex)
     {
-        int current = q.front();
-        q.pop();
-
-        for (size_t i = 0; i < numVertices; ++i)
+        // If the vertex has not been visited yet, start a BFS from it
+        if (!visited[startVertex])
         {
-            if (adjacencyMatrix[(size_t)current][i] != 0 && !visited[i])
+            q.push(startVertex);
+            visited[startVertex] = true;
+
+            while (!q.empty())
             {
-                q.push(i);
-                visited[i] = true;
+                int current = q.front();
+                q.pop();
+
+                for (size_t i = 0; i < numVertices; ++i)
+                {
+                    if (adjacencyMatrix[(size_t)current][i] != 0 && !visited[i])
+                    {
+                        q.push(i);
+                        visited[i] = true;
+                    }
+                }
             }
         }
     }
 
+    // After performing BFS from each vertex, check if all vertices were visited
     for (bool v : visited)
     {
         if (!v)
