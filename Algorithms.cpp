@@ -15,7 +15,6 @@ using namespace ariel;
 
 enum Color {WHITE, GRAY, BLACK};
 
-
 vector<int> getAdjVertices(int v, Graph &graph)
 {
     vector<int> adjVertices;
@@ -106,7 +105,7 @@ string BFS(Graph &graph, int start, int end)
     // Mark the start vertex as visited
     visited[(size_t)start] = true;
     // Set the parentVertxious node of the start vertex as itself
-   // parentVertx[start] = start;
+    // parentVertx[start] = start;
     // Add the start vertex to the queue
     q.push(start);
 
@@ -304,57 +303,6 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
   
 }
 
-
-///// ORIGINAL DFS ///////
-
-// bool DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d, vector<int>& f, int& time, Graph& graph) {
-//     color[(size_t)u] = GRAY;
-//     time++;
-//     d[(size_t)u] = time;
-
-//     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
-//     for(size_t v = 0; v < adjMatrix[(size_t)u].size(); v++) {
-//         if (adjMatrix[(size_t)u][v] != 0) {
-//             if (color[v] == WHITE) {
-//                 parent[v] = u;
-//                 if (DFSVisit(v, color, parent, d, f, time, graph)) {
-//                     return true;  // cycle detected
-//                 }
-//             } else if (color[v] == GRAY) {
-//                 if (!graph.getIsDirected() && parent[(size_t)u] == v) {
-//                     continue;
-//                 }
-//                 return true;  // cycle detected
-//             }
-//         }
-//     }
-
-//     color[(size_t)u] = BLACK;
-//     time++;
-//     f[(size_t)u] = time;
-
-//     return false;  // no cycle detected
-// }
-
-// bool DFS(Graph& graph) {
-//     size_t numVertices = graph.getNumVertices();
-//     vector<Color> color(numVertices, WHITE);
-//     vector<int> parent(numVertices, -1);
-//     vector<int> d(numVertices, 0);  // discovery time
-//     vector<int> f(numVertices, 0);  // finishing time
-
-//     int time = 0;
-
-//     for(size_t u = 0; u < numVertices; u++) {
-//         if (color[u] == WHITE) {
-//             if (DFSVisit(u, color, parent, d, f, time, graph)) {
-//                 return true;  // cycle detected
-//             }
-//         }
-//     }
-
-//     return false;  // no cycle detected
-// }
 
 //////// DFS RETURNING CYCLE STRING /////////
 string DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d, vector<int>& f, int& time, Graph& graph) {
