@@ -43,6 +43,22 @@ string constructPath(const vector<int>& parent, int start, int end)
     return path;
 }
 
+string cycleConstructor(vector<int>& cyclePath, int startingVertex) {
+    string cycle;
+    size_t i = 0;
+    for ( i = 0 ; i < cyclePath.size() ; i++) {
+        if (cyclePath[i] == startingVertex) {
+            break;
+        }
+        // cycle = to_string(cyclePath[(size_t)i]) + "->" + cycle;
+    }
+    for (size_t j = i; j < cyclePath.size(); j++) {
+        cycle = cycle + to_string(cyclePath[j]) + "->";
+    }
+    cycle = cycle + to_string(startingVertex);
+    return cycle;
+}
+
 
 bool Algorithms::isConnected(Graph graph)
 {
@@ -60,34 +76,34 @@ bool Algorithms::isConnected(Graph graph)
     // For each vertex in the graph
     for (size_t startVertex = 0; startVertex < numVertices; ++startVertex)
     {
-        // If the vertex has not been visited yet, start a BFS from it
-        if (!visited[startVertex])
+        // Reset the visited vector
+        fill(visited.begin(), visited.end(), false);
+
+        // Start a BFS from the current vertex
+        q.push(startVertex);
+        visited[startVertex] = true;
+
+        while (!q.empty())
         {
-            q.push(startVertex);
-            visited[startVertex] = true;
+            int current = q.front();
+            q.pop();
 
-            while (!q.empty())
+            for (size_t i = 0; i < numVertices; ++i)
             {
-                int current = q.front();
-                q.pop();
-
-                for (size_t i = 0; i < numVertices; ++i)
+                if (adjacencyMatrix[(size_t)current][i] != 0 && !visited[i])
                 {
-                    if (adjacencyMatrix[(size_t)current][i] != 0 && !visited[i])
-                    {
-                        q.push(i);
-                        visited[i] = true;
-                    }
+                    q.push(i);
+                    visited[i] = true;
                 }
             }
         }
-    }
 
-    // After performing BFS from each vertex, check if all vertices were visited
-    for (bool v : visited)
-    {
-        if (!v)
-            return false;
+        // After performing BFS from the current vertex, check if all vertices were visited
+        for (bool v : visited)
+        {
+            if (!v)
+                return false;
+        }
     }
 
     return true;
@@ -284,9 +300,7 @@ pair<int, int> Algorithms::DFSUtil(Graph &g, int v, vector<bool> &visited, vecto
 
 string Algorithms::shortestPath(Graph &graph, int start, int end)
 {
-  if (start == end) {
-    return "The start and end vertices are the same.";
-  }
+  
   if (start < 0 || end < 0 || start >= graph.getNumVertices() || end >= graph.getNumVertices()) {
     return "Invalid start or end vertex.";
   }
@@ -305,62 +319,67 @@ string Algorithms::shortestPath(Graph &graph, int start, int end)
 
 
 //////// DFS RETURNING CYCLE STRING /////////
-string DFSVisit(int u, vector<Color>& color, vector<int>& parent, vector<int>& d, vector<int>& f, int& time, Graph& graph) {
-    color[(size_t)u] = GRAY;
-    time++;
-    d[(size_t)u] = time;
+string containsCycleUtil(Graph& graph, size_t u, vector<Color>* color, vector<int>* parent, vector<int>* cyclePath) {
+    // Marking the vertex as visited and
+    // adding the starting vertex to the path.
+    (*color)[u] = GRAY;
+    cyclePath->push_back(u);
+    
 
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
-    for(size_t v = 0; v < adjMatrix[(size_t)u].size(); v++) {
-        if (adjMatrix[(size_t)u][v] != 0) {
-            if (color[v] == WHITE) {
-                parent[v] = u;
-                string cycle = DFSVisit(v, color, parent, d, f, time, graph);
+    for(size_t v = 0; v < graph.getAdjacencyMatrix().size(); v++) {
+        if (adjMatrix[u][v] != 0) {
+            if ((*color)[v] == WHITE) {
+                (*parent)[v] = (int)u;
+                string cycle = containsCycleUtil(graph , v, color, parent, cyclePath);
                 if (!cycle.empty()) {
-                    return to_string(u) + "->" + cycle;  // cycle detected
+                    return cycle;  // cycle detected
                 }
-            } else if (color[v] == GRAY) {
-                if (!graph.getIsDirected() && parent[(size_t)u] == v) {
+            } else if ((*color)[v] == GRAY) {
+                if (!graph.getIsDirected() && (*parent)[u] == (int)v) {
                     continue;
                 }
-                return to_string(u) + "->" + to_string(v);  // cycle detected
+                return cycleConstructor(*cyclePath,v);
+               
             }
         }
     }
 
-    color[(size_t)u] = BLACK;
-    time++;
-    f[(size_t)u] = time;
+    // as we finished with the vertex, we mark it as black
+    // and remove it from the path
+    (*color)[u] = BLACK;
+    cyclePath->pop_back();
 
     return "";  // no cycle detected
 }
 
-string Algorithms::DFS(Graph& graph) {
+string Algorithms::findCycle(Graph& graph) {
     size_t numVertices = graph.getNumVertices();
     vector<Color> color(numVertices, WHITE);
-    vector<int> parent(numVertices, -1);
-    vector<int> d(numVertices, 0);  // discovery time
-    vector<int> f(numVertices, 0);  // finishing time
+    vector<int> parentVertx(numVertices, -1);
+    vector<int> cyclePath;
+    // vector<int> d(numVertices, 0);  // discovery time
+    // vector<int> f(numVertices, 0);  // finishing time
 
-    int time = 0;
+   // int time = 0;
 
     for(size_t u = 0; u < numVertices; u++) {
         if (color[u] == WHITE) {
-            string cycle = DFSVisit(u, color, parent, d, f, time, graph);
+            string cycle = containsCycleUtil(graph, u, &color, &parentVertx, &cyclePath);
             if (!cycle.empty()) {
                 return "Graph contains a cycle: " + cycle;  // cycle detected
             }
         }
     }
 
-    return "No cycle detected";  // no cycle detected
+    return "0";  // no cycle detected
 }
 
 
 
 string Algorithms::isContainsCycle(Graph& graph) {
-    if(graph.getNumVertices() < 2) return "No cycle detected";
-    return DFS(graph);
+    if(graph.getNumVertices() < 2) return "0";
+    return findCycle(graph);
 }
 
 
@@ -451,7 +470,7 @@ string Algorithms::isBipartite(Graph &graph)
     return result;
 }
 
-string Algorithms::isNegativeCycle(Graph& graph){
+string Algorithms::negativeCycle(Graph& graph){
     
     if (graph.getWeightsType() != -1)
     {
@@ -462,9 +481,6 @@ string Algorithms::isNegativeCycle(Graph& graph){
         return "Negative cycle detected";
     }
     string helper = Algorithms::shortestPath(graph, 0, 0);
-    if(graph.getContainsNegativeCycle()){
-        return "Negative cycle detected";
-    } else {
-        return "Graph does not contain a negative cycle";
-    }
+
+    return helper;
 }
