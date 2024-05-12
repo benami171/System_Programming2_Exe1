@@ -10,6 +10,7 @@
 using namespace std;
 using namespace ariel;
 
+// Determines the weight type of the graph.
 int whatWeightType(vector<vector<int>> &matrix)
 {
     int type = 0;
@@ -31,6 +32,8 @@ int whatWeightType(vector<vector<int>> &matrix)
     return type;
 }
 
+// Loads a graph from an adjacency matrix. Throws an exception if the matrix is not square, 
+// if the diagonal is not zero, or if the matrix is not symmetric for an undirected graph.
 void Graph::loadGraph(vector<vector<int>> &matrix)
 {
     if (matrix.empty() || matrix[0].size()<2)
@@ -58,6 +61,8 @@ void Graph::loadGraph(vector<vector<int>> &matrix)
     this->weightType = whatWeightType(matrix);
 }
 
+// Prints the graph, stating whether it's directed or undirected,
+// and the number of vertices and edges.
 void Graph::printGraph()
 {
     bool type = getIsDirected();
@@ -88,6 +93,7 @@ bool Graph::getContainsNegativeCycle()
 {
     return this->containsNegativeCycle;
 }
+
 // check if the graph is directed or undirected
 // by comparing the adjacency matrix with its transpose
 void Graph::setIsDirected(bool type)
