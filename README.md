@@ -1,7 +1,7 @@
 # Graph Algorithms Project
 
 - This project implements various graph algorithms in C++. The algorithms are implemented in the `Algorithms` class and are used to perform operations on instances of the `Graph` class.
-- The graph is undirected by default in the constructor, if we want to state that the graph is directed we will type 'Graph g(true);' or use the 'setIsDirected' method in Graph.cpp
+- The graph is undirected by default in the constructor, if we want to state that the graph is directed we will type `Graph g(true);` or use the `setIsDirected` method in Graph.cpp
 
 ## Algorithms Implemented
 
