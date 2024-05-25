@@ -352,6 +352,29 @@ vector<vector<int>> convertToUndirected(Graph &graph) {
     return newAdjMatrix;
 }
 
+void appendSetToString(vector<int> &set, string &result)
+{
+    for (size_t i = 0; i < set.size(); i++)
+    {
+        result += to_string(set[i]);
+        if (i != set.size() - 1)
+        {
+            result += ",";
+        }
+    }
+}
+
+string constructResult(vector<vector<int>> &groups)
+{
+    string result = "Graph is Bipartite and those are the two sets: ";
+    result += "A={";
+    appendSetToString(groups[0], result);
+    result += "} B={";
+    appendSetToString(groups[1], result);
+    result += "}";
+    return result;
+}
+
 string Algorithms::isBipartite(Graph &graph) 
 {
     vector<vector<int>> groups(2);
@@ -409,25 +432,25 @@ for (size_t i = 0; i < numVertices; i++) {
     }
 }
 
-    // If we reach here, then all vertices can be colored with alternate color
-    // So, we return the two sets of vertices
-    string result = "Graph is Bipartite and those are the two sets: ";
-    result += "A={";
-    for (int i = 0; i < groups[0].size(); i++) {
-        result += to_string(groups[0][(size_t)i]);
-        if (i != groups[0].size() - 1) {
-            result += ",";
-        }
-    }
-    result += "} B={";
-    for (int i = 0; i < groups[1].size(); i++) {
-        result += to_string(groups[1][(size_t)i]);
-        if (i != groups[1].size() - 1) {
-            result += ",";
-        }
-    }
-    result += "}";
-    return result;
+    // // If we reach here, then all vertices can be colored with alternate color
+    // // So, we return the two sets of vertices
+    // string result = "Graph is Bipartite and those are the two sets: ";
+    // result += "A={";
+    // for (int i = 0; i < groups[0].size(); i++) {
+    //     result += to_string(groups[0][(size_t)i]);
+    //     if (i != groups[0].size() - 1) {
+    //         result += ",";
+    //     }
+    // }
+    // result += "} B={";
+    // for (int i = 0; i < groups[1].size(); i++) {
+    //     result += to_string(groups[1][(size_t)i]);
+    //     if (i != groups[1].size() - 1) {
+    //         result += ",";
+    //     }
+    // }
+    // result += "}";
+    return constructResult(groups);
 
     
 }
