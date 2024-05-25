@@ -335,20 +335,17 @@ string Algorithms::isContainsCycle(Graph& graph) {
 vector<vector<int>> convertToUndirected(Graph &graph) {
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix(); // Original adjacency matrix
     vector<vector<int>> newAdjMatrix = adjMatrix; // Copy of the adjacency matrix
-    int numVertices = graph.getNumVertices();
+    size_t numVertices = graph.getNumVertices();
 
     for (size_t i = 0; i < numVertices; i++) {
         for (size_t j = i+1; j < numVertices; j++) {
-            if (newAdjMatrix[i][j] != 0 && newAdjMatrix[j][i] != 0) {
+            if (newAdjMatrix[i][j] != 0 && newAdjMatrix[j][i] == 0) {
                 // If there are edges in both directions, take the average of the two weights
-                newAdjMatrix[i][j] = newAdjMatrix[j][i] = (newAdjMatrix[i][j] + newAdjMatrix[j][i]) / 2;
-            } else if (newAdjMatrix[i][j] != 0) {
-                // If there's only an edge from i to j, use its weight for the edge from j to i
                 newAdjMatrix[j][i] = newAdjMatrix[i][j];
-            } else if (newAdjMatrix[j][i] != 0) {
-                // If there's only an edge from j to i, use its weight for the edge from i to j
-                newAdjMatrix[i][j] = newAdjMatrix[j][i];
-            }
+            } else if (newAdjMatrix[i][j] == 0 && newAdjMatrix[j][i] != 0) // if there is an edge from j to i and not from i to j
+                {
+                    newAdjMatrix[i][j] = newAdjMatrix[j][i]; // copy the value from j to i
+                }
         }
     }
 
@@ -431,7 +428,10 @@ for (size_t i = 0; i < numVertices; i++) {
     }
     result += "}";
     return result;
+
+    
 }
+
 
 // This function checks if a graph contains a negative cycle.
 string Algorithms::negativeCycle(Graph& graph){

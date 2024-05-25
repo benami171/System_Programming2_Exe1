@@ -4,7 +4,8 @@
         "iosfwd": "cpp",
         "climits": "cpp",
         "iostream": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "functional": "cpp"
     },
     "makefile.launchConfigurations": [
         {
