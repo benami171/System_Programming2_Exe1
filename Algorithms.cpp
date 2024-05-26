@@ -25,7 +25,9 @@ enum Color
 string constructPath(const vector<int> &parent, int start, int end)
 {
     if (parent[(size_t)end] == -1)
+    {
         return "No path found";
+    }
 
     string path = to_string(end);
     while (end != start)
@@ -41,15 +43,15 @@ string constructPath(const vector<int> &parent, int start, int end)
 string cycleConstructor(vector<int> &cyclePath, int startingVertex)
 {
     string cycle;
-    size_t i = 0;
-    for (i = 0; i < cyclePath.size(); i++)
+    size_t start = 0;
+    for (start = 0; start < cyclePath.size(); start++)
     {
-        if (cyclePath[i] == startingVertex)
+        if (cyclePath[start] == startingVertex)
         {
             break;
         }
     }
-    for (size_t j = i; j < cyclePath.size(); j++)
+    for (size_t j = start; j < cyclePath.size(); j++)
     {
         cycle = cycle + to_string(cyclePath[j]) + "->";
     }
@@ -64,26 +66,27 @@ string BFS(Graph &graph, int start, int end)
     size_t numVertices = graph.getNumVertices();
     vector<int> parentVertx(numVertices, -1);
     vector<bool> visited(numVertices, false);
-    string shortestpath = "";
-    queue<int> q;
+    queue<int> queue;
     // Mark the start vertex as visited
     visited[(size_t)start] = true;
     // Set the parentVertxious node of the start vertex as itself
     // parentVertx[start] = start;
     // Add the start vertex to the queue
-    q.push(start);
+    queue.push(start);
 
     // While the queue is not empty
-    while (!q.empty())
+    while (!queue.empty())
     {
         // Get the front vertex of the queue
-        int current = q.front();
+        int current = queue.front();
         // Remove the front vertex from the queue
-        q.pop();
+        queue.pop();
 
         // If the current vertex is the end vertex, break the loop
         if (current == end)
+        {
             break;
+        }
 
         // For each vertex in the graph
         for (size_t i = 0; i < numVertices; ++i)
@@ -92,7 +95,7 @@ string BFS(Graph &graph, int start, int end)
             if (adjMatrix[(size_t)current][i] != 0 && !visited[i])
             {
                 // Add the i-th vertex to the queue
-                q.push(i);
+                queue.push((int)i);
                 // Mark the i-th vertex as visited
                 visited[i] = true;
                 // Set the parentVertxious node of the i-th vertex as the current vertex
@@ -109,14 +112,14 @@ string Dijkstra(Graph &graph, int start, int end)
 {
     size_t numVertices = graph.getNumVertices();
     vector<bool> visited(numVertices, false);
-    vector<int> d(numVertices, INT_MAX);
+    vector<int> distance(numVertices, INT_MAX);
     vector<int> parentVertx(numVertices, -1);
 
     // Initialize the priority queue for Dijkstra's algorithm
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
     // Initialize the distance of the start vertex as 0
-    d[(size_t)start] = 0;
+    distance[(size_t)start] = 0;
     // Add the start vertex to the priority queue
     pq.push({0, start});
 
@@ -130,8 +133,9 @@ string Dijkstra(Graph &graph, int start, int end)
 
         // If the vertex has been visited, skip it
         if (visited[(size_t)u])
+        {
             continue;
-
+        }
         // Mark the vertex as visited
         visited[(size_t)u] = true;
 
@@ -142,16 +146,16 @@ string Dijkstra(Graph &graph, int start, int end)
             if (graph.getAdjacencyMatrix()[(size_t)u][v] != 0 && !visited[v])
             {
                 // Calculate the new distance to the v-th vertex
-                int newdistance = d[(size_t)u] + graph.getAdjacencyMatrix()[(size_t)u][v];
+                int newdistance = distance[(size_t)u] + graph.getAdjacencyMatrix()[(size_t)u][v];
                 // If the new distance is smaller than the current distanceance
-                if (newdistance < d[v])
+                if (newdistance < distance[v])
                 {
                     // Update the distance to the v-th vertex
-                    d[v] = newdistance;
+                    distance[v] = newdistance;
                     // Set the parentVertxious node of the v-th vertex as the u-th vertex
                     parentVertx[v] = u;
                     // Add the v-th vertex to the priority queue
-                    pq.push({d[v], v});
+                    pq.push({distance[v], v});
                 }
             }
         }
@@ -163,7 +167,7 @@ string Dijkstra(Graph &graph, int start, int end)
 string bellmanford(Graph &graph, int start, int end)
 {
     size_t numVertices = graph.getNumVertices();
-    vector<int> d(numVertices, INT_MAX);
+    vector<int> distance(numVertices, INT_MAX);
     vector<int> parentVertx(numVertices, -1);
     vector<vector<int>> adjMatrix = graph.getAdjacencyMatrix();
 
@@ -173,16 +177,16 @@ string bellmanford(Graph &graph, int start, int end)
     // If the sum of the shortest distance value of the current vertex (d[u]) and the weight of the edge connecting
     // the current vertex and its adjacent vertex (adjMatrix[u][v]) is less than the shortest distance value of the adjacent vertex (d[v]),
     // then update d[v] and set the current vertex as the parent of the adjacent vertex.
-    d[(size_t)start] = 0;
+    distance[(size_t)start] = 0;
     for (size_t i = 0; i < numVertices - 1; ++i)
     {
         for (size_t u = 0; u < numVertices; ++u)
         {
             for (size_t v = 0; v < numVertices; ++v)
             {
-                if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v])
+                if (adjMatrix[u][v] != 0 && distance[u] != INT_MAX && distance[u] + adjMatrix[u][v] < distance[v])
                 {
-                    d[v] = d[u] + adjMatrix[u][v];
+                    distance[v] = distance[u] + adjMatrix[u][v];
                     parentVertx[v] = u;
                 }
             }
@@ -198,14 +202,14 @@ string bellmanford(Graph &graph, int start, int end)
     {
         for (size_t v = 0; v < numVertices; ++v)
         {
-            if (adjMatrix[u][v] != 0 && d[u] != INT_MAX && d[u] + adjMatrix[u][v] < d[v])
+            if (adjMatrix[u][v] != 0 && distance[u] != INT_MAX && distance[u] + adjMatrix[u][v] < distance[v])
             {
                 return "Negative cycle detected";
             }
         }
     }
 
-    if (d[(size_t)end] == INT_MAX)
+    if (distance[(size_t)end] == INT_MAX)
     {
         return "No path found";
     }
@@ -213,7 +217,7 @@ string bellmanford(Graph &graph, int start, int end)
     return constructPath(parentVertx, start, end);
 }
 
-bool Algorithms::isConnected(Graph graph)
+bool Algorithms::isConnected(Graph &graph)
 {
     size_t numVertices = graph.getNumVertices();
     vector<bool> visited(numVertices, false);
@@ -255,7 +259,9 @@ bool Algorithms::isConnected(Graph graph)
         for (bool v : visited)
         {
             if (!v)
+            {
                 return false;
+            }
         }
     }
 
@@ -264,23 +270,23 @@ bool Algorithms::isConnected(Graph graph)
 
 string Algorithms::shortestPath(Graph &graph, int start, int end)
 {
-
+    // Check if the start and end vertices are valid
     if (start < 0 || end < 0 || start >= graph.getNumVertices() || end >= graph.getNumVertices())
     {
         return "Invalid start or end vertex.";
     }
 
-    if (graph.getWeightsType() == 0)
+    if (graph.getWeightsType() == 0) //unweighted graph
     {
         return BFS(graph, start, end);
     }
 
-    else if (graph.getWeightsType() == 1)
+    else if (graph.getWeightsType() == 1)//positive weights
     {
         return Dijkstra(graph, start, end);
     }
 
-    return bellmanford(graph, start, end);
+    return bellmanford(graph, start, end);//negative weights
 }
 
 // This function is a helper function used to detect a cycle in a graph.
@@ -357,7 +363,10 @@ string Algorithms::findCycle(Graph &graph)
 string Algorithms::isContainsCycle(Graph &graph)
 {
     if (graph.getNumVertices() < 2)
+    {
         return "0";
+    }
+
     return findCycle(graph);
 }
 
@@ -482,7 +491,13 @@ string Algorithms::isBipartite(Graph &graph)
     return constructResult(groups);
 }
 
-// This function checks if a graph contains a negative cycle.
+
+/*
+* This function checks if a graph contains a negative cycle.
+* 1. if there are no negative edges obviously there is no negative cycle.
+* 2. if the graph is already marked as containing a negative cycle,(in case we ran bellman ford) return the value immediately.
+* 3. 
+*/ 
 string Algorithms::negativeCycle(Graph &graph)
 {
 
