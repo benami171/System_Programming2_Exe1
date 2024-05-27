@@ -6,41 +6,43 @@
 
 using namespace std;
 
-namespace ariel{
-class Graph {
-    // we made numVertices as size_t because it will never be negative
-    // and also the vector constructor takes size_t as an argument for the size
-private:
-    vector<vector<int>> adjacencyMatrix;
-    bool isDirected; // false for undirected, true for directed
-    bool containsNegativeCycle;
-    int weightType; // -1 for negative weight, 0 for no weight, 1 for positive weight
-    size_t numVertices;
+namespace ariel
+{
+    class Graph
+    {
+        // we made numVertices as size_t because it will never be negative
+        // and also the vector constructor takes size_t as an argument for the size
+    private:
+        vector<vector<int>> adjacencyMatrix;
+        bool isDirected; // false for undirected, true for directed
+        bool containsNegativeCycle;
+        int weightType; // -1 for negative weight, 0 for no weight, 1 for positive weight
+        size_t numVertices;
 
-public:
-    Graph(bool directed = false) : isDirected(directed) {}
-    // inline Constructor
-    
-    void setWeightsType(int type);
-    
-    int getWeightsType();
+    public:
+        Graph(bool directed = false) : isDirected(directed) {}
+        // inline Constructor
 
-    void printGraph();
+        void setWeightsType(int type);
 
-    bool getContainsNegativeCycle();
+        int getWeightsType() const;
 
-    void loadGraph(vector<vector<int>> &matrix);
-    
-    bool getIsDirected();
+        void printGraph();
 
-    size_t getNumVertices();
+        bool getContainsNegativeCycle();
 
-    void setContainsNegativeCycle(bool flag);
-    
-    void setIsDirected(bool type);
+        void loadGraph(const vector<vector<int>> &matrix);
 
-    vector<vector<int>> getAdjacencyMatrix();
+        bool getIsDirected() const;
 
-};
+        size_t getNumVertices() const;
+
+        void setContainsNegativeCycle(bool flag);
+
+        void setIsDirected(bool type);
+
+        vector<vector<int>> getAdjacencyMatrix();
+    };
 }
+
 #endif

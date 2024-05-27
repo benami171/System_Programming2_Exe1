@@ -10,9 +10,9 @@
 using namespace std;
 namespace ariel
 {
-    
+
     // Determines the weight type of the graph.
-    int whatWeightType(vector<vector<int>> &matrix)
+    int whatWeightType(const vector<vector<int>> &matrix)
     {
         int type = 0;
         size_t matSize = matrix.size();
@@ -35,7 +35,7 @@ namespace ariel
 
     // Loads a graph from an adjacency matrix. Throws an exception if the matrix is not square,
     // if the diagonal is not zero, or if the matrix is not symmetric for an undirected graph.
-    void Graph::loadGraph(vector<vector<int>> &matrix)
+    void Graph::loadGraph(const vector<vector<int>> &matrix)
     {
         if (matrix.empty() || matrix[0].size() < 2)
         {
@@ -104,8 +104,6 @@ namespace ariel
         return this->containsNegativeCycle;
     }
 
-    // check if the graph is directed or undirected
-    // by comparing the adjacency matrix with its transpose
     void Graph::setIsDirected(bool type)
     {
         this->isDirected = type;
@@ -116,7 +114,7 @@ namespace ariel
         this->weightType = type;
     }
 
-    size_t Graph::getNumVertices()
+    size_t Graph::getNumVertices() const
     {
         return numVertices;
     }
@@ -126,12 +124,12 @@ namespace ariel
         return adjacencyMatrix;
     }
 
-    bool Graph::getIsDirected()
+    bool Graph::getIsDirected() const
     {
         return this->isDirected;
     }
 
-    int Graph::getWeightsType()
+    int Graph::getWeightsType() const
     {
         return this->weightType;
     }
