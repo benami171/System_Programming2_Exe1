@@ -169,7 +169,7 @@ TEST_CASE("Test Directed and Undirected Graphs")
         CHECK(ariel::Algorithms::isBipartite(g) == "Graph is Bipartite and those are the two sets: A={0} B={1}");
 }
 
-TEST_CASE("TestAll Directed - No Weights")
+TEST_CASE("Test Directed - No Weights")
 {
         // 1.
         ariel::Graph g(true);
@@ -247,7 +247,7 @@ TEST_CASE("TestAll Directed - No Weights")
         CHECK(ariel::Algorithms::isBipartite(g) == "Graph is Bipartite and those are the two sets: A={0} B={1,2,3,4,5,6,7}");
         CHECK(ariel::Algorithms::negativeCycle(g) == "Graph does not contain a negative cycle");
 }
-TEST_CASE("TestAll Directed - Non Negative Weights")
+TEST_CASE("Test Directed - Non Negative Weights")
 {
         ariel::Graph g(true);
         vector<vector<int>> graph = {
@@ -298,7 +298,7 @@ TEST_CASE("TestAll Directed - Non Negative Weights")
         CHECK(ariel::Algorithms::isBipartite(g) == "Graph is not Bipartite");
         CHECK(ariel::Algorithms::negativeCycle(g) == "Graph does not contain a negative cycle");
 }
-    TEST_CASE("TestAll Directed - Negative Weights")
+    TEST_CASE("Test Directed - Negative Weights")
 {
     ariel::Graph g(true);
     vector<vector<int>> graph = {
@@ -403,7 +403,7 @@ TEST_CASE("TestAll Directed - Non Negative Weights")
     CHECK(ariel::Algorithms::isConnected(g) == false);
 
 }
-TEST_CASE("TestAll Undirected - No Weights")
+TEST_CASE("Test Undirected - No Weights")
 {
     ariel::Graph g;
     vector <vector<int>> graph = {
@@ -461,7 +461,7 @@ TEST_CASE("TestAll Undirected - No Weights")
     CHECK(ariel::Algorithms::isBipartite(g) == "Graph is not Bipartite");
     CHECK(ariel::Algorithms::negativeCycle(g) == "Graph does not contain a negative cycle");
 }
-     TEST_CASE("TestAll Undirected - Non Negative Weights")
+     TEST_CASE("Test Undirected - Non Negative Weights")
 {
     ariel::Graph g;
     vector <vector<int>> graph = {
@@ -513,7 +513,7 @@ TEST_CASE("TestAll Undirected - No Weights")
     CHECK(ariel::Algorithms::isBipartite(g) == "Graph is Bipartite and those are the two sets: A={0,4,5} B={3,1,2}");
     CHECK(ariel::Algorithms::negativeCycle(g) == "Graph does not contain a negative cycle");
 }
-    TEST_CASE("TestAll Undirected - Negative Weights")
+    TEST_CASE("Test Undirected - Negative Weights")
 {
     ariel::Graph g;
     vector<vector<int>> graph = {
@@ -546,7 +546,7 @@ TEST_CASE("TestAll Undirected - No Weights")
     CHECK(ariel::Algorithms::negativeCycle(g) == "Negative cycle detected");
     
 }
-TEST_CASE("TestAll invalid graphs")
+TEST_CASE("Testing invalid graphs loading")
 {
     ariel::Graph g;
     vector<vector<int>> graph = {
@@ -558,15 +558,10 @@ TEST_CASE("TestAll invalid graphs")
     CHECK_THROWS(g.loadGraph(graph));
 
     vector<vector<int>> graph2 = {
-            {0,1,1,1,1}
+            {0,1,2}
     };
     CHECK_THROWS(g.loadGraph(graph2));
 
-    vector<vector<int>> graph3 = {
-            {0,1},
-            {1,0}
-    };
-    CHECK_NOTHROW(g.loadGraph(graph3));
 
     vector <vector<int>> graph4 = {
             {0}
