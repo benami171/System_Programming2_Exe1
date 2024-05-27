@@ -24,7 +24,7 @@ namespace ariel
                 {
                     return -1;
                 }
-                else if (matrix[i][j] > 0)
+                if (matrix[i][j] > 1)
                 {
                     type = 1;
                 }
@@ -33,8 +33,11 @@ namespace ariel
         return type;
     }
 
-    // Loads a graph from an adjacency matrix. Throws an exception if the matrix is not square,
-    // if the diagonal is not zero, or if the matrix is not symmetric for an undirected graph.
+    /*
+     Loads a graph from an adjacency matrix.
+     Throws an exception if the matrix is not square or if the diagonal is not zero.
+     If the graph is undirected and the matrix is not symmetric, we set the graph to be directed.
+    */
     void Graph::loadGraph(const vector<vector<int>> &matrix)
     {
         if (matrix.empty() || matrix[0].size() < 2)
@@ -64,14 +67,13 @@ namespace ariel
                 }
             }
         }
-        this->weightType = whatWeightType(matrix);
+        this->weightType = whatWeightType(matrix); // eventually sets the weight type of the graph
     }
 
     // Prints the graph, stating whether it's directed or undirected,
     // and the number of vertices and edges.
     void Graph::printGraph()
     {
-        bool type = getIsDirected();
         int edges = 0;
         for (size_t i = 0; i < adjacencyMatrix.size(); ++i)
         {
@@ -119,7 +121,7 @@ namespace ariel
         return numVertices;
     }
 
-    vector<vector<int>> Graph::getAdjacencyMatrix()
+    vector<vector<int>> Graph::getAdjacencyMatrix() const
     {
         return adjacencyMatrix;
     }

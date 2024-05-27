@@ -41,7 +41,7 @@ namespace ariel
 
         void setIsDirected(bool type);
 
-        vector<vector<int>> getAdjacencyMatrix();
+        vector<vector<int>> getAdjacencyMatrix() const;
     };
 }
 
