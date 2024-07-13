@@ -431,13 +431,10 @@ string Algorithms::isBipartite(Graph &graph)
     vector<vector<int>> adjMatrix;
 
     // Check if the graph is directed
-    if (graph.getIsDirected())
-    {
+    if (graph.getIsDirected()) {
         // If the graph is directed, get a convert adjMatrix vertion of the graph to undirected.
         adjMatrix = convertToUndirected(graph);
-    }
-    else
-    {
+    } else {
         // If the graph is undirected, use its adjacency matrix as is
         adjMatrix = graph.getAdjacencyMatrix();
     }
