@@ -420,10 +420,8 @@ string Algorithms::isBipartite(Graph &graph) {
             }
         }
     }
-
     // If we reach here, then all vertices can be colored with alternate color
     // So, we return the two sets of vertices
-
     return constructResult(groups);
 }
 
