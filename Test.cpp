@@ -6,7 +6,6 @@ using namespace std;
 TEST_CASE("Test isConnected Undirected graph")
 {
         ariel::Graph g;
-
         g.setIsDirected(false);
         vector<vector<int>> graph = {
             {0, 1, 0},
