@@ -1,7 +1,6 @@
 // NAME: GAL BEN AMI
-
 #include "Algorithms.hpp"
-#include "Graph.hpp"
+
 #include <algorithm>
 #include <climits>
 #include <limits>
@@ -9,6 +8,7 @@
 #include <set>
 #include <vector>
 
+#include "Graph.hpp"
 
 using namespace std;
 using namespace ariel;
