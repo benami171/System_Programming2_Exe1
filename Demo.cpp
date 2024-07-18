@@ -93,7 +93,6 @@ int main()
     cout << Algorithms::shortestPath(g1, 3, 5) << endl; // should return No path found
     cout << Algorithms::negativeCycle(g1) << endl;      // should return The graph contains a negative cycle
     cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is Bipartite and those are the two sets: A={0,2,3,6} B={1,5,4}
-    cout << Algorithms::isContainsCycle(g1) << endl;    // should return 0
     cout << "" << endl;
 
     vector<vector<int>> graph6 = {
