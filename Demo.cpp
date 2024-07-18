@@ -42,7 +42,6 @@ int main()
     cout << Algorithms::isConnected(g1) << endl;        // should return 1
     cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return Negative cycle detected
     cout << Algorithms::negativeCycle(g1) << endl;      // should return Negative cycle detected
-    cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is Bipartite and those are the two sets: A={0,2} B={1}
     cout << Algorithms::isContainsCycle(g1) << endl;    // should return Graph contains a cycle: 0->1->0
     cout << "" << endl;
 
@@ -56,7 +55,6 @@ int main()
     g1.printGraph();                                    // should return Directed graph with 3 vertices and 6 edges.
     cout << Algorithms::isConnected(g1) << endl;        // should return 1
     cout << Algorithms::shortestPath(g1, 0, 2) << endl; // should return 0->2
-    cout << Algorithms::negativeCycle(g1) << endl;      // should return Graph does not contain a negative cycle
     cout << Algorithms::isBipartite(g1) << endl;        // should return Graph is not Bipartite
     cout << Algorithms::isContainsCycle(g1) << endl;    // should return Graph contains a cycle: 0->1->0
     cout << "" << endl;
